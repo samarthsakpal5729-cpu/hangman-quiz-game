@@ -78,7 +78,7 @@ body{
     display:block;
 }
 
-/* MENU */
+/* ================= MENU ================= */
 
 .menu{
     min-height:590px;
@@ -93,7 +93,13 @@ body{
     font-size:clamp(38px,8vw,75px);
     font-weight:1000;
     letter-spacing:4px;
-    background:linear-gradient(90deg,#22d3ee,#a855f7,#ec4899,#facc15);
+    background:linear-gradient(
+        90deg,
+        #22d3ee,
+        #a855f7,
+        #ec4899,
+        #facc15
+    );
     -webkit-background-clip:text;
     color:transparent;
     text-shadow:0 0 30px #22d3ee44;
@@ -142,11 +148,12 @@ button:hover{
     background:#334155;
 }
 
-/* ROBOT */
+/* ================= ROBOT ================= */
 
 .robot-area{
     margin-top:25px;
     position:relative;
+    text-align:center;
 }
 
 .robot{
@@ -166,7 +173,9 @@ button:hover{
     border-radius:20px;
     background:linear-gradient(145deg,#e2e8f0,#64748b);
     border:4px solid #22d3ee;
-    box-shadow:0 0 20px #22d3ee99;
+    box-shadow:
+        0 0 20px #22d3ee99,
+        inset 0 0 15px #ffffff55;
 }
 
 .eye{
@@ -179,8 +188,13 @@ button:hover{
     box-shadow:0 0 12px #22d3ee;
 }
 
-.eye.left{left:17px}
-.eye.right{right:17px}
+.eye.left{
+    left:17px;
+}
+
+.eye.right{
+    right:17px;
+}
 
 .mouth{
     position:absolute;
@@ -214,8 +228,13 @@ button:hover{
 }
 
 @keyframes dance{
-    from{transform:rotate(-4deg) translateY(0)}
-    to{transform:rotate(4deg) translateY(-8px)}
+    from{
+        transform:rotate(-4deg) translateY(0);
+    }
+
+    to{
+        transform:rotate(4deg) translateY(-8px);
+    }
 }
 
 .avatar-message{
@@ -229,7 +248,7 @@ button:hover{
     font-size:14px;
 }
 
-/* GAME */
+/* ================= GAME ================= */
 
 .game-header{
     display:flex;
@@ -270,7 +289,12 @@ button:hover{
 .progress{
     width:0%;
     height:100%;
-    background:linear-gradient(90deg,#22d3ee,#a855f7,#ec4899);
+    background:linear-gradient(
+        90deg,
+        #22d3ee,
+        #a855f7,
+        #ec4899
+    );
     box-shadow:0 0 15px #22d3ee;
     transition:.5s;
 }
@@ -368,7 +392,51 @@ input:focus{
     word-break:break-word;
 }
 
-/* INSTRUCTIONS */
+/* ================= GAME ROBOT ================= */
+
+.game-robot-area{
+    margin-top:18px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.game-robot{
+    width:100px;
+    height:90px;
+    transform:scale(.9);
+    transform-origin:center;
+}
+
+.game-robot-area .avatar-message{
+    max-width:250px;
+}
+
+.return-menu-btn{
+    width:100%;
+    margin-top:20px;
+    padding:13px 18px;
+    background:linear-gradient(
+        135deg,
+        #334155,
+        #475569
+    );
+    border:1px solid #64748b;
+    color:#fff;
+    box-shadow:0 0 15px #33415588;
+}
+
+.return-menu-btn:hover{
+    background:linear-gradient(
+        135deg,
+        #475569,
+        #64748b
+    );
+    box-shadow:0 0 25px #22d3ee66;
+}
+
+/* ================= INSTRUCTIONS ================= */
 
 .instruction-screen{
     min-height:590px;
@@ -400,7 +468,7 @@ input:focus{
     background:#334155;
 }
 
-/* RESULT */
+/* ================= RESULT ================= */
 
 .result{
     min-height:590px;
@@ -431,12 +499,21 @@ input:focus{
 
 .play-again{
     margin-top:30px;
-    background:linear-gradient(135deg,#06b6d4,#7c3aed);
+    background:linear-gradient(
+        135deg,
+        #06b6d4,
+        #7c3aed
+    );
 }
 
-/* MOBILE */
+.result-robot{
+    margin-bottom:10px;
+}
+
+/* ================= MOBILE ================= */
 
 @media(max-width:800px){
+
     .game-grid{
         grid-template-columns:1fr;
     }
@@ -453,6 +530,31 @@ input:focus{
     .container{
         padding:15px;
     }
+
+    .game-header{
+        justify-content:center;
+        text-align:center;
+    }
+
+    .game-title{
+        width:100%;
+    }
+
+    .input-row{
+        flex-direction:column;
+    }
+
+    .guess-btn{
+        width:100%;
+    }
+
+    .result h2{
+        font-size:38px;
+    }
+
+    .final-score{
+        font-size:40px;
+    }
 }
 </style>
 </head>
@@ -461,226 +563,328 @@ input:focus{
 
 <div class="container">
 
-    <!-- MENU -->
-    <section id="menuScreen" class="screen active">
+<!-- ================= MENU ================= -->
 
-        <div class="menu">
+<section id="menuScreen" class="screen active">
 
-            <div class="logo">BOOM BLASTIC</div>
+<div class="menu">
 
-            <div class="subtitle">
-                C++ • OOP • HANGMAN QUIZ
-            </div>
+<div class="logo">
+BOOM BLASTIC
+</div>
 
-            <div class="robot-area">
+<div class="subtitle">
+C++ • OOP • HANGMAN QUIZ
+</div>
 
-                <div class="robot">
+<div class="robot-area">
 
-                    <div class="antenna"></div>
+<div class="robot">
 
-                    <div class="robot-head">
+<div class="antenna"></div>
 
-                        <div class="eye left"></div>
-                        <div class="eye right"></div>
+<div class="robot-head">
 
-                        <div class="mouth"></div>
+<div class="eye left"></div>
+<div class="eye right"></div>
 
-                    </div>
+<div class="mouth"></div>
 
-                </div>
+</div>
 
-                <div id="avatarMessage" class="avatar-message">
-                    Ready for the challenge? 🤖
-                </div>
+</div>
 
-            </div>
+<div id="avatarMessage" class="avatar-message">
+Ready for the challenge? 🤖
+</div>
 
-            <div class="menu-buttons">
+</div>
 
-                <button class="start-btn" onclick="startGame()">
-                    🚀 START GAME
-                </button>
+<div class="menu-buttons">
 
-                <button class="info-btn" onclick="showInstructions()">
-                    📖 HOW TO PLAY
-                </button>
+<button
+class="start-btn"
+onclick="startGame()">
+🚀 START GAME
+</button>
 
-            </div>
+<button
+class="info-btn"
+onclick="showInstructions()">
+📖 HOW TO PLAY
+</button>
 
-        </div>
+</div>
 
-    </section>
+</div>
 
+</section>
 
-    <!-- INSTRUCTIONS -->
-    <section id="instructionScreen" class="screen">
 
-        <div class="instruction-screen">
+<!-- ================= INSTRUCTIONS ================= -->
 
-            <h2>How To Play</h2>
+<section id="instructionScreen" class="screen">
 
-            <div class="instructions">
+<div class="instruction-screen">
 
-                <div class="instruction">
-                    🎯 Guess the hidden C++ / OOP answer one character at a time.
-                </div>
+<h2>
+How To Play
+</h2>
 
-                <div class="instruction">
-                    ❤️ You get 5 lives for every question.
-                </div>
+<div class="instructions">
 
-                <div class="instruction">
-                    ⭐ Correct character = +5 points.
-                </div>
+<div class="instruction">
+🎯 Guess the hidden C++ / OOP answer one character at a time.
+</div>
 
-                <div class="instruction">
-                    💥 Wrong character = -1 life.
-                </div>
+<div class="instruction">
+❤️ You get 5 lives for every question.
+</div>
 
-                <div class="instruction">
-                    🧠 Complete the answer to move to the next question.
-                </div>
+<div class="instruction">
+⭐ Correct character = +5 points.
+</div>
 
-                <div class="instruction">
-                    🏆 Complete all 20 questions and see your final score.
-                </div>
+<div class="instruction">
+💥 Wrong character = -1 life.
+</div>
 
-            </div>
+<div class="instruction">
+🧠 Complete the answer to move to the next question.
+</div>
 
-            <button class="back-btn" onclick="showScreen('menuScreen')">
-                ← BACK
-            </button>
+<div class="instruction">
+🏆 Complete all 20 questions and see your final score.
+</div>
 
-        </div>
+</div>
 
-    </section>
+<button
+class="back-btn"
+onclick="showScreen('menuScreen')">
+← BACK TO MAIN MENU
+</button>
 
+</div>
 
-    <!-- GAME -->
-    <section id="gameScreen" class="screen">
+</section>
 
-        <div class="game-header">
 
-            <div class="game-title">
-                BOOM BLASTIC
-            </div>
+<!-- ================= GAME ================= -->
 
-            <div class="badges">
+<section id="gameScreen" class="screen">
 
-                <div class="badge">
-                    Question:
-                    <span id="questionNumber">1/20</span>
-                </div>
+<div class="game-header">
 
-                <div class="badge">
-                    ❤️ <span id="lives">5</span>
-                </div>
+<div class="game-title">
+BOOM BLASTIC
+</div>
 
-                <div class="badge">
-                    ⭐ <span id="score">0</span>
-                </div>
+<div class="badges">
 
-            </div>
+<div class="badge">
+Question:
+<span id="questionNumber">1/20</span>
+</div>
 
-        </div>
+<div class="badge">
+❤️ <span id="lives">5</span>
+</div>
 
+<div class="badge">
+⭐ <span id="score">0</span>
+</div>
 
-        <div class="progress-box">
-            <div id="progress" class="progress"></div>
-        </div>
+</div>
 
+</div>
 
-        <div class="game-grid">
 
-            <div class="card">
+<div class="progress-box">
 
-                <canvas
-                    id="hangmanCanvas"
-                    width="240"
-                    height="250">
-                </canvas>
+<div
+id="progress"
+class="progress">
+</div>
 
-                <div id="gameAvatar" class="avatar-message">
-                    🤖 Keep going!
-                </div>
+</div>
 
-            </div>
 
+<div class="game-grid">
 
-            <div class="card">
 
-                <div id="category" class="category">
-                    OOP
-                </div>
+<!-- LEFT SIDE -->
 
-                <div id="question" class="question">
-                    Loading question...
-                </div>
+<div class="card">
 
-                <div id="answer" class="answer">
-                    _ _ _ _
-                </div>
+<canvas
+id="hangmanCanvas"
+width="240"
+height="250">
+</canvas>
 
-                <div class="input-row">
 
-                    <input
-                        id="letterInput"
-                        type="text"
-                        maxlength="1"
-                        autocomplete="off"
-                        placeholder="A-Z"
-                        aria-label="Enter a character">
+<!-- ROBOT -->
 
-                    <button
-                        class="guess-btn"
-                        onclick="guessLetter()">
-                        GUESS
-                    </button>
+<div class="game-robot-area">
 
-                </div>
+<div class="robot game-robot">
 
-                <div id="message" class="message"></div>
+<div class="antenna"></div>
 
-                <div id="guessed" class="guessed">
-                    Guessed: None
-                </div>
+<div class="robot-head">
 
-            </div>
+<div class="eye left"></div>
+<div class="eye right"></div>
 
-        </div>
+<div class="mouth"></div>
 
-    </section>
+</div>
 
+</div>
 
-    <!-- RESULT -->
-    <section id="resultScreen" class="screen">
+<div
+id="gameAvatar"
+class="avatar-message">
+🤖 Keep going!
+</div>
 
-        <div class="result">
+</div>
 
-            <h2>GAME COMPLETE!</h2>
 
-            <div class="final-score" id="finalScore">
-                0 Points
-            </div>
+<!-- MAIN MENU BUTTON -->
 
-            <div id="resultMessage" class="result-message">
-                Great job!
-            </div>
+<button
+class="return-menu-btn"
+onclick="returnToMainMenu()">
+🏠 RETURN TO MAIN MENU
+</button>
 
-            <button class="play-again" onclick="startGame()">
-                🔄 PLAY AGAIN
-            </button>
+</div>
 
-            <button
-                class="back-btn"
-                style="margin-top:12px"
-                onclick="showScreen('menuScreen')">
-                🏠 MAIN MENU
-            </button>
 
-        </div>
+<!-- RIGHT SIDE -->
 
-    </section>
+<div class="card">
+
+<div
+id="category"
+class="category">
+OOP
+</div>
+
+<div
+id="question"
+class="question">
+Loading question...
+</div>
+
+<div
+id="answer"
+class="answer">
+_ _ _ _
+</div>
+
+<div class="input-row">
+
+<input
+id="letterInput"
+type="text"
+maxlength="1"
+autocomplete="off"
+placeholder="A-Z"
+aria-label="Enter a character">
+
+<button
+class="guess-btn"
+onclick="guessLetter()">
+GUESS
+</button>
+
+</div>
+
+<div
+id="message"
+class="message">
+</div>
+
+<div
+id="guessed"
+class="guessed">
+Guessed: None
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= RESULT ================= -->
+
+<section id="resultScreen" class="screen">
+
+<div class="result">
+
+<!-- RESULT ROBOT -->
+
+<div class="robot-area result-robot">
+
+<div class="robot">
+
+<div class="antenna"></div>
+
+<div class="robot-head">
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+
+<div class="mouth"></div>
+
+</div>
+
+</div>
+
+<div class="avatar-message">
+🤖 You did it!
+</div>
+
+</div>
+
+
+<h2>
+GAME COMPLETE!
+</h2>
+
+<div
+class="final-score"
+id="finalScore">
+0 Points
+</div>
+
+<div
+id="resultMessage"
+class="result-message">
+Great job!
+</div>
+
+<button
+class="play-again"
+onclick="startGame()">
+🔄 PLAY AGAIN
+</button>
+
+<button
+class="back-btn"
+style="margin-top:12px"
+onclick="returnToMainMenu()">
+🏠 MAIN MENU
+</button>
+
+</div>
+
+</section>
 
 </div>
 
@@ -688,136 +892,136 @@ input:focus{
 <script>
 
 /* ===============================
-   QUESTION BANK
+QUESTION BANK
 ================================ */
 
 const questions = [
 
-    {
-        category:"C++",
-        question:"Which programming language is commonly used for Object-Oriented Programming?",
-        answer:"C++"
-    },
+{
+category:"C++",
+question:"Which programming language is commonly used for Object-Oriented Programming?",
+answer:"C++"
+},
 
-    {
-        category:"OOP",
-        question:"Which OOP concept hides internal implementation details?",
-        answer:"ENCAPSULATION"
-    },
+{
+category:"OOP",
+question:"Which OOP concept hides internal implementation details?",
+answer:"ENCAPSULATION"
+},
 
-    {
-        category:"OOP",
-        question:"Which feature allows a child class to use parent class members?",
-        answer:"INHERITANCE"
-    },
+{
+category:"OOP",
+question:"Which feature allows a child class to use parent class members?",
+answer:"INHERITANCE"
+},
 
-    {
-        category:"C++",
-        question:"Which keyword is used to create an object dynamically in C++?",
-        answer:"NEW"
-    },
+{
+category:"C++",
+question:"Which keyword is used to create an object dynamically in C++?",
+answer:"NEW"
+},
 
-    {
-        category:"OOP",
-        question:"Which OOP concept allows the same function name to have different behavior?",
-        answer:"POLYMORPHISM"
-    },
+{
+category:"OOP",
+question:"Which OOP concept allows the same function name to have different behavior?",
+answer:"POLYMORPHISM"
+},
 
-    {
-        category:"OOP",
-        question:"What is a blueprint for creating objects called?",
-        answer:"CLASS"
-    },
+{
+category:"OOP",
+question:"What is a blueprint for creating objects called?",
+answer:"CLASS"
+},
 
-    {
-        category:"OOP",
-        question:"What is an instance of a class called?",
-        answer:"OBJECT"
-    },
+{
+category:"OOP",
+question:"What is an instance of a class called?",
+answer:"OBJECT"
+},
 
-    {
-        category:"OOP",
-        question:"Which concept exposes only the necessary information?",
-        answer:"ABSTRACTION"
-    },
+{
+category:"OOP",
+question:"Which concept exposes only the necessary information?",
+answer:"ABSTRACTION"
+},
 
-    {
-        category:"C++",
-        question:"Which keyword is used to define a class in C++?",
-        answer:"CLASS"
-    },
+{
+category:"C++",
+question:"Which keyword is used to define a class in C++?",
+answer:"CLASS"
+},
 
-    {
-        category:"C++",
-        question:"Which keyword creates a constant variable in C++?",
-        answer:"CONST"
-    },
+{
+category:"C++",
+question:"Which keyword creates a constant variable in C++?",
+answer:"CONST"
+},
 
-    {
-        category:"OOP",
-        question:"What is the process of creating an object from a class?",
-        answer:"INSTANTIATION"
-    },
+{
+category:"OOP",
+question:"What is the process of creating an object from a class?",
+answer:"INSTANTIATION"
+},
 
-    {
-        category:"OOP",
-        question:"Which special function is automatically called when an object is created?",
-        answer:"CONSTRUCTOR"
-    },
+{
+category:"OOP",
+question:"Which special function is automatically called when an object is created?",
+answer:"CONSTRUCTOR"
+},
 
-    {
-        category:"OOP",
-        question:"Which special function is called when an object is destroyed?",
-        answer:"DESTRUCTOR"
-    },
+{
+category:"OOP",
+question:"Which special function is called when an object is destroyed?",
+answer:"DESTRUCTOR"
+},
 
-    {
-        category:"C++",
-        question:"Which keyword refers to the current object?",
-        answer:"THIS"
-    },
+{
+category:"C++",
+question:"Which keyword refers to the current object?",
+answer:"THIS"
+},
 
-    {
-        category:"C++",
-        question:"Which access specifier makes members accessible from outside the class?",
-        answer:"PUBLIC"
-    },
+{
+category:"C++",
+question:"Which access specifier makes members accessible from outside the class?",
+answer:"PUBLIC"
+},
 
-    {
-        category:"C++",
-        question:"Which access specifier restricts members to the class itself?",
-        answer:"PRIVATE"
-    },
+{
+category:"C++",
+question:"Which access specifier restricts members to the class itself?",
+answer:"PRIVATE"
+},
 
-    {
-        category:"OOP",
-        question:"What is defining multiple functions with the same name but different parameters called?",
-        answer:"OVERLOADING"
-    },
+{
+category:"OOP",
+question:"What is defining multiple functions with the same name but different parameters called?",
+answer:"OVERLOADING"
+},
 
-    {
-        category:"OOP",
-        question:"What is redefining a parent class method in a child class called?",
-        answer:"OVERRIDING"
-    },
+{
+category:"OOP",
+question:"What is redefining a parent class method in a child class called?",
+answer:"OVERRIDING"
+},
 
-    {
-        category:"OOP",
-        question:"Which access specifier allows derived classes to access members while restricting general outside access?",
-        answer:"PROTECTED"
-    },
+{
+category:"OOP",
+question:"Which access specifier allows derived classes to access members while restricting general outside access?",
+answer:"PROTECTED"
+},
 
-    {
-        category:"C++",
-        question:"Which keyword allows a member function to be overridden at runtime?",
-        answer:"VIRTUAL"
-    }
+{
+category:"C++",
+question:"Which keyword allows a member function to be overridden at runtime?",
+answer:"VIRTUAL"
+}
 
 ];
 
 
 /* ===============================
-   GAME VARIABLES
+GAME VARIABLES
 ================================ */
 
 let gameQuestions=[];
@@ -831,811 +1035,980 @@ let transitioning=false;
 
 
 /* ===============================
-   AUDIO
+AUDIO
 ================================ */
 
 let audioContext=null;
 
 function getAudio(){
 
-    if(!audioContext){
+if(!audioContext){
 
-        const AudioClass=
-            window.AudioContext ||
-            window.webkitAudioContext;
+const AudioClass =
+window.AudioContext ||
+window.webkitAudioContext;
 
-        if(!AudioClass) return null;
+if(!AudioClass) return null;
 
-        audioContext=new AudioClass();
-    }
+audioContext=new AudioClass();
 
-    return audioContext;
 }
+
+return audioContext;
+
+}
+
 
 function playTone(
-    frequency,
-    duration,
-    type="sine",
-    volume=.1
+frequency,
+duration,
+type="sine",
+volume=.1
 ){
 
-    try{
+try{
 
-        const audio=getAudio();
+const audio=getAudio();
 
-        if(!audio) return;
+if(!audio) return;
 
-        if(audio.state==="suspended"){
-            audio.resume();
-        }
-
-        const oscillator=audio.createOscillator();
-        const gain=audio.createGain();
-
-        oscillator.type=type;
-
-        oscillator.frequency.setValueAtTime(
-            frequency,
-            audio.currentTime
-        );
-
-        gain.gain.setValueAtTime(
-            .001,
-            audio.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            volume,
-            audio.currentTime+.02
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            .001,
-            audio.currentTime+duration
-        );
-
-        oscillator.connect(gain);
-        gain.connect(audio.destination);
-
-        oscillator.start();
-        oscillator.stop(
-            audio.currentTime+duration
-        );
-
-    }catch(e){}
+if(audio.state==="suspended"){
+audio.resume();
 }
+
+const oscillator=audio.createOscillator();
+const gain=audio.createGain();
+
+oscillator.type=type;
+
+oscillator.frequency.setValueAtTime(
+frequency,
+audio.currentTime
+);
+
+gain.gain.setValueAtTime(
+.001,
+audio.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+volume,
+audio.currentTime+.02
+);
+
+gain.gain.exponentialRampToValueAtTime(
+.001,
+audio.currentTime+duration
+);
+
+oscillator.connect(gain);
+gain.connect(audio.destination);
+
+oscillator.start();
+
+oscillator.stop(
+audio.currentTime+duration
+);
+
+}catch(e){}
+
+}
+
 
 function playSound(type){
 
-    if(type==="click"){
-        playTone(500,.08,"sine",.06);
-    }
+if(type==="click"){
+playTone(500,.08,"sine",.06);
+}
 
-    if(type==="correct"){
+if(type==="correct"){
 
-        playTone(700,.12,"sine",.1);
+playTone(700,.12,"sine",.1);
 
-        setTimeout(()=>{
-            playTone(950,.16,"sine",.08);
-        },100);
+setTimeout(()=>{
+playTone(950,.16,"sine",.08);
+},100);
 
-    }
+}
 
-    if(type==="wrong"){
-        playTone(180,.2,"sawtooth",.06);
-    }
+if(type==="wrong"){
 
-    if(type==="win"){
+playTone(180,.2,"sawtooth",.06);
 
-        playTone(600,.15,"sine",.1);
+}
 
-        setTimeout(()=>{
-            playTone(800,.15,"sine",.1);
-        },120);
+if(type==="win"){
 
-        setTimeout(()=>{
-            playTone(1100,.3,"sine",.12);
-        },240);
+playTone(600,.15,"sine",.1);
 
-    }
+setTimeout(()=>{
+playTone(800,.15,"sine",.1);
+},120);
+
+setTimeout(()=>{
+playTone(1100,.3,"sine",.12);
+},240);
+
+}
+
 }
 
 
 /* ===============================
-   SHUFFLE
+SHUFFLE
 ================================ */
 
 function shuffleQuestions(){
 
-    gameQuestions=[...questions];
+gameQuestions=[...questions];
 
-    for(let i=gameQuestions.length-1;i>0;i--){
+for(let i=gameQuestions.length-1;i>0;i--){
 
-        const j=Math.floor(
-            Math.random()*(i+1)
-        );
+const j=Math.floor(
+Math.random()*(i+1)
+);
 
-        [
-            gameQuestions[i],
-            gameQuestions[j]
-        ]=[
-            gameQuestions[j],
-            gameQuestions[i]
-        ];
-    }
+[
+gameQuestions[i],
+gameQuestions[j]
+]=[
+gameQuestions[j],
+gameQuestions[i]
+];
+
+}
+
 }
 
 
 /* ===============================
-   SCREEN
+SCREEN
 ================================ */
 
 function showScreen(id){
 
-    document
-        .querySelectorAll(".screen")
-        .forEach(screen=>{
-            screen.classList.remove("active");
-        });
+document
+.querySelectorAll(".screen")
+.forEach(screen=>{
+screen.classList.remove("active");
+});
 
-    const target=document.getElementById(id);
+const target=document.getElementById(id);
 
-    if(target){
-        target.classList.add("active");
-    }
+if(target){
+target.classList.add("active");
+}
+
 }
 
 
 /* ===============================
-   START
+RETURN TO MAIN MENU
+================================ */
+
+function returnToMainMenu(){
+
+gameFinished=true;
+transitioning=false;
+
+showScreen("menuScreen");
+
+avatarMessage(
+"Welcome back! Ready for another BOOM? 🤖🔥"
+);
+
+playSound("click");
+
+}
+
+
+/* ===============================
+HOW TO PLAY
+================================ */
+
+function showInstructions(){
+
+playSound("click");
+
+showScreen("instructionScreen");
+
+}
+
+
+/* ===============================
+START
 ================================ */
 
 function startGame(){
 
-    playSound("click");
+playSound("click");
 
-    currentQuestion=0;
-    score=0;
-    lives=5;
-    guessedLetters=[];
-    hiddenAnswer="";
-    gameFinished=false;
-    transitioning=false;
+currentQuestion=0;
+score=0;
+lives=5;
+guessedLetters=[];
+hiddenAnswer="";
+gameFinished=false;
+transitioning=false;
 
-    shuffleQuestions();
+shuffleQuestions();
 
-    showScreen("gameScreen");
+showScreen("gameScreen");
 
-    avatarMessage("BOOM! Let's start! 🔥");
+avatarMessage(
+"BOOM! Let's start! 🔥"
+);
 
-    loadQuestion();
+loadQuestion();
+
 }
 
 
 /* ===============================
-   LOAD QUESTION
+LOAD QUESTION
 ================================ */
 
 function loadQuestion(){
 
-    if(currentQuestion>=gameQuestions.length){
+if(currentQuestion>=gameQuestions.length){
 
-        finishGame();
-        return;
-    }
+finishGame();
 
-    lives=5;
-    guessedLetters=[];
-    transitioning=false;
+return;
 
-    const q=gameQuestions[currentQuestion];
+}
 
-    document.getElementById("questionNumber")
-        .textContent=
-        `${currentQuestion+1}/${gameQuestions.length}`;
+lives=5;
+guessedLetters=[];
+transitioning=false;
 
-    document.getElementById("category")
-        .textContent=q.category;
+const q=gameQuestions[currentQuestion];
 
-    document.getElementById("question")
-        .textContent=q.question;
+document.getElementById("questionNumber")
+.textContent=
+`${currentQuestion+1}/${gameQuestions.length}`;
 
-    hiddenAnswer=q.answer
-        .split("")
-        .map(char=>{
-            if(char===" ") return " ";
-            return "_";
-        })
-        .join("");
+document.getElementById("category")
+.textContent=q.category;
 
-    updateAnswer();
-    updateGuessedLetters();
-    updateStats();
-    updateProgress();
+document.getElementById("question")
+.textContent=q.question;
 
-    document.getElementById("message")
-        .textContent="";
+hiddenAnswer=q.answer
+.split("")
+.map(char=>{
 
-    const input=
-        document.getElementById("letterInput");
+if(char===" ") return " ";
 
-    input.value="";
+return "_";
 
-    drawHangman();
+})
+.join("");
 
-    avatarMessage("Question time! 🧠");
+updateAnswer();
+updateGuessedLetters();
+updateStats();
+updateProgress();
 
-    setTimeout(()=>{
-        if(!gameFinished &&
-           document
-           .getElementById("gameScreen")
-           .classList.contains("active")){
-            input.focus();
-        }
-    },150);
+document.getElementById("message")
+.textContent="";
+
+const input=
+document.getElementById("letterInput");
+
+input.value="";
+
+drawHangman();
+
+avatarMessage(
+"Question time! 🧠"
+);
+
+setTimeout(()=>{
+
+if(
+!gameFinished &&
+document
+.getElementById("gameScreen")
+.classList.contains("active")
+){
+
+input.focus();
+
+}
+
+},150);
+
 }
 
 
 /* ===============================
-   ANSWER
+ANSWER
 ================================ */
 
 function updateAnswer(){
 
-    const display=hiddenAnswer
-        .split("")
-        .map(char=>{
-            if(char===" ") return " ";
-            return char;
-        })
-        .join(" ");
+const display=hiddenAnswer
+.split("")
+.map(char=>{
 
-    document.getElementById("answer")
-        .textContent=display;
+if(char===" ") return " ";
+
+return char;
+
+})
+.join(" ");
+
+document.getElementById("answer")
+.textContent=display;
+
 }
 
 
 /* ===============================
-   GUESSED
+GUESSED
 ================================ */
 
 function updateGuessedLetters(){
 
-    document.getElementById("guessed")
-        .textContent=
-        guessedLetters.length
-        ? "Guessed: "+guessedLetters.join(", ")
-        : "Guessed: None";
+document.getElementById("guessed")
+.textContent=
+guessedLetters.length
+?
+"Guessed: "+guessedLetters.join(", ")
+:
+"Guessed: None";
+
 }
 
 
 /* ===============================
-   STATS
+STATS
 ================================ */
 
 function updateStats(){
 
-    document.getElementById("lives")
-        .textContent=lives;
+document.getElementById("lives")
+.textContent=lives;
 
-    document.getElementById("score")
-        .textContent=score;
+document.getElementById("score")
+.textContent=score;
+
 }
 
 
 /* ===============================
-   PROGRESS
+PROGRESS
 ================================ */
 
 function updateProgress(){
 
-    const percentage=
-        ((currentQuestion+1)/
-        gameQuestions.length)*100;
+const percentage=
+((currentQuestion+1)/
+gameQuestions.length)*100;
 
-    document.getElementById("progress")
-        .style.width=percentage+"%";
+document.getElementById("progress")
+.style.width=percentage+"%";
+
 }
 
 
 /* ===============================
-   GUESS
+GUESS
 ================================ */
 
 function guessLetter(){
 
-    if(gameFinished || transitioning){
-        return;
-    }
+if(gameFinished || transitioning){
+return;
+}
 
-    const input=
-        document.getElementById("letterInput");
+const input=
+document.getElementById("letterInput");
 
-    const letter=
-        input.value.toUpperCase().trim();
+const letter=
+input.value
+.toUpperCase()
+.trim();
 
-    if(letter.length!==1){
+if(letter.length!==1){
 
-        showMessage("⚠️ Enter ONE character.");
-        avatarMessage("One character at a time! 🤖");
-        playSound("wrong");
+showMessage(
+"⚠️ Enter ONE character."
+);
 
-        input.value="";
-        return;
-    }
+avatarMessage(
+"One character at a time! 🤖"
+);
 
-    if(!/^[A-Z+]$/.test(letter)){
+playSound("wrong");
 
-        showMessage("⚠️ Use A-Z or + only.");
-        avatarMessage("Only A-Z or + allowed! 😅");
-        playSound("wrong");
+input.value="";
 
-        input.value="";
-        return;
-    }
+return;
 
-    if(guessedLetters.includes(letter)){
+}
 
-        showMessage(
-            `⚠️ ${letter} already guessed!`
-        );
 
-        avatarMessage("Try another character! 😎");
-        playSound("wrong");
+if(!/^[A-Z+]$/.test(letter)){
 
-        input.value="";
-        return;
-    }
+showMessage(
+"⚠️ Use A-Z or + only."
+);
 
-    guessedLetters.push(letter);
+avatarMessage(
+"Only A-Z or + allowed! 😅"
+);
 
-    const answer=
-        gameQuestions[currentQuestion]
-        .answer
-        .toUpperCase();
+playSound("wrong");
 
-    let found=false;
+input.value="";
 
-    let newAnswer=
-        hiddenAnswer.split("");
+return;
 
-    for(let i=0;i<answer.length;i++){
+}
 
-        if(answer[i]===letter){
 
-            newAnswer[i]=letter;
-            found=true;
-        }
-    }
+if(guessedLetters.includes(letter)){
 
-    hiddenAnswer=newAnswer.join("");
+showMessage(
+`⚠️ ${letter} already guessed!`
+);
 
-    if(found){
+avatarMessage(
+"Try another character! 😎"
+);
 
-        score+=5;
+playSound("wrong");
 
-        showMessage("✅ CORRECT! +5 POINTS");
+input.value="";
 
-        avatarMessage(
-            "BOOM! That's correct! 🔥"
-        );
+return;
 
-        playSound("correct");
+}
 
-        flashGame("correct");
 
-    }else{
+guessedLetters.push(letter);
 
-        lives--;
+const answer=
+gameQuestions[currentQuestion]
+.answer
+.toUpperCase();
 
-        showMessage("❌ WRONG GUESS!");
+let found=false;
 
-        avatarMessage(
-            "Don't give up! 💪"
-        );
+let newAnswer=
+hiddenAnswer.split("");
 
-        playSound("wrong");
 
-        flashGame("wrong");
-    }
+for(let i=0;i<answer.length;i++){
 
-    updateAnswer();
-    updateGuessedLetters();
-    updateStats();
-    drawHangman();
+if(answer[i]===letter){
 
-    input.value="";
+newAnswer[i]=letter;
+found=true;
 
-    if(hiddenAnswer===answer){
+}
 
-        transitioning=true;
+}
 
-        showMessage(
-            "🎉 ANSWER COMPLETE!"
-        );
+hiddenAnswer=newAnswer.join("");
 
-        avatarMessage(
-            "AMAZING! Next question! 🚀"
-        );
 
-        playSound("win");
+if(found){
 
-        setTimeout(()=>{
-            nextQuestion();
-        },1000);
+score+=5;
 
-        return;
-    }
+showMessage(
+"✅ CORRECT! +5 POINTS"
+);
 
-    if(lives<=0){
+avatarMessage(
+"BOOM! That's correct! 🔥"
+);
 
-        transitioning=true;
+playSound("correct");
 
-        setTimeout(()=>{
-            gameOver();
-        },800);
-    }
+flashGame("correct");
+
+}else{
+
+lives--;
+
+showMessage(
+"❌ WRONG GUESS!"
+);
+
+avatarMessage(
+"Don't give up! 💪"
+);
+
+playSound("wrong");
+
+flashGame("wrong");
+
+}
+
+
+updateAnswer();
+updateGuessedLetters();
+updateStats();
+drawHangman();
+
+input.value="";
+
+
+if(hiddenAnswer===answer){
+
+transitioning=true;
+
+showMessage(
+"🎉 ANSWER COMPLETE!"
+);
+
+avatarMessage(
+"AMAZING! Next question! 🚀"
+);
+
+playSound("win");
+
+setTimeout(()=>{
+nextQuestion();
+},1000);
+
+return;
+
+}
+
+
+if(lives<=0){
+
+transitioning=true;
+
+setTimeout(()=>{
+gameOver();
+},800);
+
+}
+
 }
 
 
 /* ===============================
-   NEXT
+NEXT QUESTION
 ================================ */
 
 function nextQuestion(){
 
-    if(gameFinished) return;
+if(gameFinished) return;
 
-    currentQuestion++;
+currentQuestion++;
 
-    if(currentQuestion>=gameQuestions.length){
-        finishGame();
-    }else{
-        loadQuestion();
-    }
+if(currentQuestion>=gameQuestions.length){
+
+finishGame();
+
+}else{
+
+loadQuestion();
+
+}
+
 }
 
 
 /* ===============================
-   GAME OVER QUESTION
+GAME OVER QUESTION
 ================================ */
 
 function gameOver(){
 
-    if(gameFinished) return;
+if(gameFinished) return;
 
-    const answer=
-        gameQuestions[currentQuestion].answer;
+const answer=
+gameQuestions[currentQuestion].answer;
 
-    showMessage(
-        "💀 OUT OF LIVES! Answer: "+answer
-    );
+showMessage(
+"💀 OUT OF LIVES! Answer: "+answer
+);
 
-    avatarMessage(
-        "No problem! Keep going! 🚀"
-    );
+avatarMessage(
+"No problem! Keep going! 🚀"
+);
 
-    drawHangman();
+drawHangman();
 
-    setTimeout(()=>{
-        nextQuestion();
-    },1500);
+setTimeout(()=>{
+nextQuestion();
+},1500);
+
 }
 
 
 /* ===============================
-   FINISH
+FINISH
 ================================ */
 
 function finishGame(){
 
-    if(gameFinished) return;
+if(gameFinished) return;
 
-    gameFinished=true;
-    transitioning=false;
+gameFinished=true;
+transitioning=false;
 
-    document.getElementById("finalScore")
-        .textContent=
-        score+" Points";
+document.getElementById("finalScore")
+.textContent=
+score+" Points";
 
-    /*
-       Calculate realistic maximum score:
-       each unique character can give +5.
-    */
 
-    let maxScore=0;
+let maxScore=0;
 
-    gameQuestions.forEach(q=>{
+gameQuestions.forEach(q=>{
 
-        const uniqueChars=
-            new Set(
-                q.answer
-                .toUpperCase()
-                .replace(/ /g,"")
-                .split("")
-            );
+const uniqueChars=
+new Set(
+q.answer
+.toUpperCase()
+.replace(/ /g,"")
+.split("")
+);
 
-        maxScore+=uniqueChars.size*5;
-    });
+maxScore+=uniqueChars.size*5;
 
-    let performance="";
+});
 
-    if(score>=maxScore*.8){
 
-        performance=
-            "🔥 LEGENDARY! Outstanding OOP knowledge!";
+let performance="";
 
-    }else if(score>=maxScore*.6){
+if(score>=maxScore*.8){
 
-        performance=
-            "🚀 GREAT JOB! Strong performance!";
+performance=
+"🔥 LEGENDARY! Outstanding OOP knowledge!";
 
-    }else if(score>=maxScore*.4){
+}else if(score>=maxScore*.6){
 
-        performance=
-            "💪 GOOD EFFORT! Keep practicing!";
+performance=
+"🚀 GREAT JOB! Strong performance!";
 
-    }else{
+}else if(score>=maxScore*.4){
 
-        performance=
-            "📚 KEEP LEARNING! Practice makes perfect!";
-    }
+performance=
+"💪 GOOD EFFORT! Keep practicing!";
 
-    document.getElementById("resultMessage")
-        .textContent=
-        performance+
-        " You completed all "+
-        gameQuestions.length+
-        " questions.";
+}else{
 
-    showScreen("resultScreen");
+performance=
+"📚 KEEP LEARNING! Practice makes perfect!";
 
-    playSound("win");
-    flashGame("win");
+}
+
+
+document.getElementById("resultMessage")
+.textContent=
+performance+
+" You completed all "+
+gameQuestions.length+
+" questions.";
+
+showScreen("resultScreen");
+
+playSound("win");
+
+flashGame("win");
+
 }
 
 
 /* ===============================
-   AVATAR MESSAGE
+AVATAR MESSAGE
 ================================ */
 
 function avatarMessage(message){
 
-    const boxes=[
-        document.getElementById("avatarMessage"),
-        document.getElementById("gameAvatar")
-    ];
+const boxes=[
 
-    boxes.forEach(box=>{
+document.getElementById("avatarMessage"),
 
-        if(!box) return;
+document.getElementById("gameAvatar")
 
-        box.textContent=message;
+];
 
-    });
+boxes.forEach(box=>{
+
+if(!box) return;
+
+box.textContent=message;
+
+});
+
 }
 
 
 /* ===============================
-   MESSAGE
+MESSAGE
 ================================ */
 
 function showMessage(message){
 
-    document.getElementById("message")
-        .textContent=message;
+const messageBox=
+document.getElementById("message");
+
+if(messageBox){
+messageBox.textContent=message;
+}
+
 }
 
 
 /* ===============================
-   FLASH
+FLASH
 ================================ */
 
 function flashGame(type){
 
-    const container=
-        document.querySelector(".container");
+const container=
+document.querySelector(".container");
 
-    if(!container) return;
+if(!container) return;
 
-    if(type==="correct"){
 
-        container.style.boxShadow=
-            "0 0 30px #22d3ee,"+
-            "0 0 80px #22d3ee55";
-    }
+if(type==="correct"){
 
-    if(type==="wrong"){
+container.style.boxShadow=
+"0 0 30px #22d3ee,"+
+"0 0 80px #22d3ee55";
 
-        container.style.boxShadow=
-            "0 0 30px #ec4899,"+
-            "0 0 80px #ec489955";
-    }
+}
 
-    if(type==="win"){
 
-        container.style.boxShadow=
-            "0 0 40px #facc15,"+
-            "0 0 100px #a855f766";
-    }
+if(type==="wrong"){
 
-    setTimeout(()=>{
+container.style.boxShadow=
+"0 0 30px #ec4899,"+
+"0 0 80px #ec489955";
 
-        container.style.boxShadow=
-            "0 0 25px #7c3aed66,"+
-            "0 0 70px #06b6d433,"+
-            "inset 0 0 50px #ffffff05";
+}
 
-    },500);
+
+if(type==="win"){
+
+container.style.boxShadow=
+"0 0 40px #facc15,"+
+"0 0 100px #a855f766";
+
+}
+
+
+setTimeout(()=>{
+
+container.style.boxShadow=
+"0 0 25px #7c3aed66,"+
+"0 0 70px #06b6d433,"+
+"inset 0 0 50px #ffffff05";
+
+},500);
+
 }
 
 
 /* ===============================
-   HANGMAN
+HANGMAN
 ================================ */
 
 function drawHangman(){
 
-    const canvas=
-        document.getElementById(
-            "hangmanCanvas"
-        );
+const canvas=
+document.getElementById(
+"hangmanCanvas"
+);
 
-    if(!canvas) return;
+if(!canvas) return;
 
-    const ctx=canvas.getContext("2d");
+const ctx=
+canvas.getContext("2d");
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    ctx.fillStyle="#020617";
+ctx.fillStyle="#020617";
 
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    ctx.shadowBlur=12;
-    ctx.shadowColor="#22d3ee";
+ctx.shadowBlur=12;
+ctx.shadowColor="#22d3ee";
 
-    ctx.lineWidth=5;
-    ctx.strokeStyle="#e2e8f0";
-    ctx.lineCap="round";
+ctx.lineWidth=5;
+ctx.strokeStyle="#e2e8f0";
+ctx.lineCap="round";
 
-    /* GALLOWS */
 
-    ctx.beginPath();
+/* GALLOWS */
 
-    ctx.moveTo(30,220);
-    ctx.lineTo(210,220);
+ctx.beginPath();
 
-    ctx.moveTo(70,220);
-    ctx.lineTo(70,30);
+ctx.moveTo(30,220);
+ctx.lineTo(210,220);
 
-    ctx.lineTo(170,30);
+ctx.moveTo(70,220);
+ctx.lineTo(70,30);
 
-    ctx.lineTo(170,60);
+ctx.lineTo(170,30);
 
-    ctx.stroke();
+ctx.lineTo(170,60);
 
-    const wrong=5-lives;
+ctx.stroke();
 
-    /* HEAD */
 
-    if(wrong>=1){
+const wrong=5-lives;
 
-        ctx.beginPath();
 
-        ctx.arc(
-            170,
-            85,
-            25,
-            0,
-            Math.PI*2
-        );
+/* HEAD */
 
-        ctx.stroke();
-    }
+if(wrong>=1){
 
-    /* BODY */
+ctx.beginPath();
 
-    if(wrong>=2){
+ctx.arc(
+170,
+85,
+25,
+0,
+Math.PI*2
+);
 
-        ctx.beginPath();
+ctx.stroke();
 
-        ctx.moveTo(170,110);
-        ctx.lineTo(170,165);
+}
 
-        ctx.stroke();
-    }
 
-    /* LEFT ARM */
+/* BODY */
 
-    if(wrong>=3){
+if(wrong>=2){
 
-        ctx.beginPath();
+ctx.beginPath();
 
-        ctx.moveTo(170,125);
-        ctx.lineTo(135,150);
+ctx.moveTo(170,110);
+ctx.lineTo(170,165);
 
-        ctx.stroke();
-    }
+ctx.stroke();
 
-    /* RIGHT ARM */
+}
 
-    if(wrong>=4){
 
-        ctx.beginPath();
+/* LEFT ARM */
 
-        ctx.moveTo(170,125);
-        ctx.lineTo(205,150);
+if(wrong>=3){
 
-        ctx.stroke();
-    }
+ctx.beginPath();
 
-    /* LEGS */
+ctx.moveTo(170,125);
+ctx.lineTo(135,150);
 
-    if(wrong>=5){
+ctx.stroke();
 
-        ctx.beginPath();
+}
 
-        ctx.moveTo(170,165);
-        ctx.lineTo(140,200);
 
-        ctx.moveTo(170,165);
-        ctx.lineTo(200,200);
+/* RIGHT ARM */
 
-        ctx.stroke();
-    }
+if(wrong>=4){
 
-    ctx.shadowBlur=0;
+ctx.beginPath();
+
+ctx.moveTo(170,125);
+ctx.lineTo(205,150);
+
+ctx.stroke();
+
+}
+
+
+/* LEGS */
+
+if(wrong>=5){
+
+ctx.beginPath();
+
+ctx.moveTo(170,165);
+ctx.lineTo(140,200);
+
+ctx.moveTo(170,165);
+ctx.lineTo(200,200);
+
+ctx.stroke();
+
+}
+
+ctx.shadowBlur=0;
+
 }
 
 
 /* ===============================
-   ENTER KEY
+INPUT EVENTS
 ================================ */
 
-document.getElementById("letterInput")
-.addEventListener("keydown",function(event){
+function setupInput(){
 
-    if(event.key==="Enter"){
+const input=
+document.getElementById("letterInput");
 
-        event.preventDefault();
-        guessLetter();
-    }
+if(!input) return;
+
+
+input.addEventListener(
+"keydown",
+function(event){
+
+if(event.key==="Enter"){
+
+event.preventDefault();
+
+guessLetter();
+
+}
 
 });
 
 
-/* ===============================
-   INPUT
-================================ */
+input.addEventListener(
+"input",
+function(){
 
-document.getElementById("letterInput")
-.addEventListener("input",function(){
-
-    this.value=
-        this.value
-        .toUpperCase()
-        .slice(0,1);
+this.value=
+this.value
+.toUpperCase()
+.slice(0,1);
 
 });
 
+}
+
 
 /* ===============================
-   INITIALIZE
+INITIALIZE
 ================================ */
 
-window.addEventListener("load",function(){
+window.addEventListener(
+"load",
+function(){
 
-    showScreen("menuScreen");
+setupInput();
+
+showScreen("menuScreen");
+
+avatarMessage(
+"Ready for the challenge? 🤖"
+);
 
 });
 
