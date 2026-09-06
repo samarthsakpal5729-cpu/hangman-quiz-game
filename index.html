@@ -1,879 +1,1127 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hangman Quiz Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
+    <title>Hangman Quiz Game</title>
 
-body{
-    min-height:100vh;
-    font-family:Arial,sans-serif;
-    background:radial-gradient(circle at top,#283593,#111827 45%,#020617);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.container{
-    width:100%;
-    max-width:900px;
-    background:rgba(15,23,42,.96);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:25px;
-    padding:30px;
-    box-shadow:0 25px 60px rgba(0,0,0,.5);
-}
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(
+                circle at top,
+                #283593,
+                #111827 45%,
+                #020617
+            );
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-.screen{
-    display:none;
-}
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+        }
 
-.screen.active{
-    display:block;
-}
+        .screen {
+            display: none;
+        }
 
-h1{
-    text-align:center;
-    font-size:42px;
-    margin-bottom:15px;
-    letter-spacing:3px;
-}
+        .screen.active {
+            display: block;
+        }
 
-h2{
-    text-align:center;
-    margin-bottom:20px;
-}
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+        }
 
-.subtitle{
-    text-align:center;
-    color:#cbd5e1;
-    margin-bottom:30px;
-}
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-button{
-    border:none;
-    padding:14px 25px;
-    border-radius:12px;
-    background:#6366f1;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
-    margin:7px;
-}
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
 
-button:hover{
-    transform:translateY(-2px);
-    background:#818cf8;
-}
+        button {
+            border: none;
+            padding: 14px 25px;
+            border-radius: 12px;
+            background: #6366f1;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 7px;
+        }
 
-.menu-buttons{
-    text-align:center;
-}
+        button:hover {
+            transform: translateY(-2px);
+            background: #818cf8;
+        }
 
-.game-header{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:25px;
-}
+        .menu-buttons {
+            text-align: center;
+        }
 
-.stat{
-    flex:1;
-    background:#1e293b;
-    border-radius:15px;
-    padding:15px;
-    text-align:center;
-}
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
 
-.stat-title{
-    font-size:13px;
-    color:#94a3b8;
-    margin-bottom:5px;
-}
+        .stat {
+            flex: 1;
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
 
-.stat-value{
-    font-size:25px;
-    font-weight:bold;
-}
+        .stat-title {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
 
-.category{
-    text-align:center;
-    color:#a5b4fc;
-    font-weight:bold;
-    margin-bottom:10px;
-}
+        .stat-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
 
-.question{
-    text-align:center;
-    font-size:23px;
-    font-weight:bold;
-    margin-bottom:20px;
-}
+        .category {
+            text-align: center;
+            color: #a5b4fc;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-canvas{
-    display:block;
-    margin:0 auto 20px;
-    background:#0f172a;
-    border-radius:15px;
-    border:1px solid #334155;
-}
+        .question {
+            text-align: center;
+            font-size: 23px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
-.answer{
-    text-align:center;
-    font-size:30px;
-    letter-spacing:10px;
-    margin:20px 0;
-    font-weight:bold;
-    min-height:40px;
-}
+        canvas {
+            display: block;
+            margin: 0 auto 20px;
+            background: #0f172a;
+            border-radius: 15px;
+            border: 1px solid #334155;
+        }
 
-.guessed{
-    text-align:center;
-    color:#94a3b8;
-    margin-bottom:20px;
-}
+        .answer {
+            text-align: center;
+            font-size: 30px;
+            letter-spacing: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 40px;
+        }
 
-.input-area{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-}
+        .guessed {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
 
-input{
-    width:100px;
-    padding:14px;
-    border-radius:12px;
-    border:2px solid #475569;
-    background:#0f172a;
-    color:white;
-    text-align:center;
-    font-size:20px;
-    outline:none;
-}
+        .input-area {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
 
-input:focus{
-    border-color:#818cf8;
-}
+        input {
+            width: 100px;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #475569;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            outline: none;
+        }
 
-.message{
-    text-align:center;
-    min-height:25px;
-    margin-top:15px;
-    font-weight:bold;
-}
+        input:focus {
+            border-color: #818cf8;
+        }
 
-.instructions{
-    line-height:1.8;
-    color:#cbd5e1;
-    background:#1e293b;
-    padding:25px;
-    border-radius:15px;
-    margin-bottom:20px;
-}
+        .message {
+            text-align: center;
+            min-height: 25px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
 
-.instructions p{
-    margin-bottom:8px;
-}
+        .instructions {
+            line-height: 1.8;
+            color: #cbd5e1;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
 
-.result{
-    text-align:center;
-}
+        .instructions p {
+            margin-bottom: 8px;
+        }
 
-.result-score{
-    font-size:40px;
-    font-weight:bold;
-    margin:20px;
-}
+        .result {
+            text-align: center;
+        }
 
-.status{
-    text-align:center;
-    margin-top:20px;
-    color:#4ade80;
-    font-size:14px;
-}
+        .result-score {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 20px;
+        }
 
-@media(max-width:600px){
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            color: #4ade80;
+            font-size: 14px;
+        }
 
-    .container{
-        padding:20px;
-    }
+        @media (max-width: 600px) {
 
-    h1{
-        font-size:30px;
-    }
+            .container {
+                padding: 20px;
+            }
 
-    .game-header{
-        flex-direction:column;
-    }
+            h1 {
+                font-size: 30px;
+            }
 
-    .question{
-        font-size:18px;
-    }
+            .game-header {
+                flex-direction: column;
+            }
 
-    .answer{
-        font-size:23px;
-        letter-spacing:6px;
-    }
-}
-</style>
+            .question {
+                font-size: 18px;
+            }
+
+            .answer {
+                font-size: 23px;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<!-- MENU -->
-<div id="menuScreen" class="screen active">
+        <!-- =========================
+             MENU SCREEN
+        ========================== -->
 
-    <h1>🎯 HANGMAN</h1>
+        <div id="menuScreen" class="screen active">
 
-    <p class="subtitle">
-        C++ OOP Based Quiz Game
-    </p>
+            <h1>🎯 HANGMAN</h1>
 
-    <div class="menu-buttons">
+            <p class="subtitle">
+                C++ OOP Based Quiz Game
+            </p>
 
-        <button onclick="startGame()">
-            ▶ Start Game
-        </button>
+            <div class="menu-buttons">
 
-        <button onclick="showInstructions()">
-            📖 Instructions
-        </button>
+                <button onclick="startGame()">
+                    ▶ Start Game
+                </button>
 
-        <button onclick="exitGame()">
-            🚪 Exit
-        </button>
+                <button onclick="showInstructions()">
+                    📖 Instructions
+                </button>
 
-    </div>
+                <button onclick="exitGame()">
+                    🚪 Exit
+                </button>
 
-    <div class="status">
-        🟢 Game Ready — GitHub Pages
-    </div>
+            </div>
 
-</div>
+            <div class="status">
+                🟢 Game Ready — GitHub Pages
+            </div>
 
-<!-- INSTRUCTIONS -->
-<div id="instructionScreen" class="screen">
-
-    <h2>📖 How To Play</h2>
-
-    <div class="instructions">
-
-        <p>🎯 Guess the hidden word one letter at a time.</p>
-        <p>❤️ You have 5 lives for each question.</p>
-        <p>✅ Correct letter gives you 5 points.</p>
-        <p>❌ Wrong letter removes one life.</p>
-        <p>🔤 Enter only one letter from A-Z.</p>
-        <p>🏆 Complete all questions to get your final score.</p>
-
-    </div>
-
-    <div style="text-align:center">
-
-        <button onclick="showScreen('menuScreen')">
-            ← Back
-        </button>
-
-    </div>
-
-</div>
-
-<!-- GAME -->
-<div id="gameScreen" class="screen">
-
-    <div class="game-header">
-
-        <div class="stat">
-            <div class="stat-title">QUESTION</div>
-            <div class="stat-value" id="questionNumber">1/5</div>
         </div>
 
-        <div class="stat">
-            <div class="stat-title">LIVES</div>
-            <div class="stat-value" id="lives">❤️ 5</div>
+
+        <!-- =========================
+             INSTRUCTIONS SCREEN
+        ========================== -->
+
+        <div id="instructionScreen" class="screen">
+
+            <h2>📖 How To Play</h2>
+
+            <div class="instructions">
+
+                <p>🎯 Guess the hidden word one letter at a time.</p>
+
+                <p>❤️ You have 5 lives for each question.</p>
+
+                <p>✅ Correct letter gives you 5 points.</p>
+
+                <p>❌ Wrong letter removes one life.</p>
+
+                <p>🔤 Enter letters A-Z or the + symbol.</p>
+
+                <p>🏆 Complete all questions to get your final score.</p>
+
+            </div>
+
+            <div style="text-align:center">
+
+                <button onclick="showScreen('menuScreen')">
+                    ← Back
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="stat">
-            <div class="stat-title">SCORE</div>
-            <div class="stat-value" id="score">0</div>
+
+        <!-- =========================
+             GAME SCREEN
+        ========================== -->
+
+        <div id="gameScreen" class="screen">
+
+            <div class="game-header">
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        QUESTION
+                    </div>
+
+                    <div class="stat-value" id="questionNumber">
+                        1/5
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        LIVES
+                    </div>
+
+                    <div class="stat-value" id="lives">
+                        ❤️ 5
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        SCORE
+                    </div>
+
+                    <div class="stat-value" id="score">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div id="category" class="category">
+                Programming
+            </div>
+
+
+            <div id="question" class="question">
+                Loading question...
+            </div>
+
+
+            <canvas
+                id="hangmanCanvas"
+                width="250"
+                height="250">
+            </canvas>
+
+
+            <div id="answer" class="answer">
+            </div>
+
+
+            <div id="guessed" class="guessed">
+                Guessed: None
+            </div>
+
+
+            <div class="input-area">
+
+                <input
+                    type="text"
+                    id="letterInput"
+                    maxlength="1"
+                    placeholder="A"
+                    autocomplete="off"
+                >
+
+                <button onclick="guessLetter()">
+                    GUESS
+                </button>
+
+            </div>
+
+
+            <div id="message" class="message">
+            </div>
+
+
+            <div style="text-align:center">
+
+                <button onclick="showScreen('menuScreen')">
+                    Main Menu
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             RESULT SCREEN
+        ========================== -->
+
+        <div id="resultScreen" class="screen">
+
+            <div class="result">
+
+                <h1>
+                    🏆 GAME FINISHED
+                </h1>
+
+                <p id="resultMessage">
+                    Well Done!
+                </p>
+
+                <div id="finalScore" class="result-score">
+                    0 Points
+                </div>
+
+                <button onclick="startGame()">
+                    🔄 Play Again
+                </button>
+
+                <button onclick="showScreen('menuScreen')">
+                    🏠 Main Menu
+                </button>
+
+            </div>
+
         </div>
 
     </div>
 
-    <div id="category" class="category">
-        Programming
-    </div>
 
-    <div id="question" class="question">
-        Loading question...
-    </div>
-
-    <canvas id="hangmanCanvas" width="250" height="250"></canvas>
-
-    <div id="answer" class="answer"></div>
-
-    <div id="guessed" class="guessed">
-        Guessed: None
-    </div>
-
-    <div class="input-area">
-
-        <input
-            type="text"
-            id="letterInput"
-            maxlength="1"
-            placeholder="A"
-            autocomplete="off"
-        >
-
-        <button onclick="guessLetter()">
-            GUESS
-        </button>
-
-    </div>
-
-    <div id="message" class="message"></div>
-
-    <div style="text-align:center">
-
-        <button onclick="showScreen('menuScreen')">
-            Main Menu
-        </button>
-
-    </div>
-
-</div>
-
-<!-- RESULT -->
-<div id="resultScreen" class="screen">
-
-    <div class="result">
-
-        <h1>🏆 GAME FINISHED</h1>
-
-        <p id="resultMessage">
-            Well Done!
-        </p>
-
-        <div id="finalScore" class="result-score">
-            0 Points
-        </div>
-
-        <button onclick="startGame()">
-            🔄 Play Again
-        </button>
-
-        <button onclick="showScreen('menuScreen')">
-            🏠 Main Menu
-        </button>
-
-    </div>
-
-</div>
-
-</div>
-
-<script>
-
-/* =========================
-   QUIZ QUESTIONS
-========================= */
-
-const questions = [
-
-    {
-        category: "Programming",
-        question: "Which programming language is commonly used for OOP?",
-        answer: "CPP"
-    },
-
-    {
-        category: "OOP",
-        question: "Which OOP concept hides internal implementation details?",
-        answer: "ENCAPSULATION"
-    },
-
-    {
-        category: "OOP",
-        question: "Which concept allows one class to acquire properties of another class?",
-        answer: "INHERITANCE"
-    },
-
-    {
-        category: "Programming",
-        question: "Which keyword is used to create an object dynamically in C++?",
-        answer: "NEW"
-    },
-
-    {
-        category: "OOP",
-        question: "Which OOP concept allows the same function name to have different behavior?",
-        answer: "POLYMORPHISM"
-    }
-
-];
-
-
-/* =========================
-   GAME VARIABLES
-========================= */
-
-let currentQuestion = 0;
-let score = 0;
-let lives = 5;
-let guessedLetters = [];
-let hiddenAnswer = "";
-
-
-/* =========================
-   SCREEN
-========================= */
-
-function showScreen(screenId){
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(screen => {
-            screen.classList.remove("active");
-        });
-
-    document
-        .getElementById(screenId)
-        .classList.add("active");
-}
-
-
-/* =========================
-   START GAME
-========================= */
-
-function startGame(){
-
-    currentQuestion = 0;
-    score = 0;
-
-    showScreen("gameScreen");
-
-    loadQuestion();
-}
-
-
-/* =========================
-   LOAD QUESTION
-========================= */
-
-function loadQuestion(){
-
-    if(currentQuestion >= questions.length){
-
-        finishGame();
-        return;
-    }
-
-    lives = 5;
-    guessedLetters = [];
-
-    const q = questions[currentQuestion];
-
-    document.getElementById("questionNumber").textContent =
-        `${currentQuestion + 1}/${questions.length}`;
-
-    document.getElementById("category").textContent =
-        q.category;
-
-    document.getElementById("question").textContent =
-        q.question;
-
-    hiddenAnswer = q.answer
-        .split("")
-        .map(() => "_")
-        .join("");
-
-    updateAnswer();
-    updateGuessedLetters();
-    updateStats();
-
-    document.getElementById("message").textContent = "";
-
-    document.getElementById("letterInput").value = "";
-
-    drawHangman();
-
-    setTimeout(() => {
-        document.getElementById("letterInput").focus();
-    }, 100);
-}
-
-
-/* =========================
-   ANSWER
-========================= */
-
-function updateAnswer(){
-
-    document.getElementById("answer").textContent =
-        hiddenAnswer
-            .split("")
-            .join(" ");
-}
-
-
-/* =========================
-   GUESSED LETTERS
-========================= */
-
-function updateGuessedLetters(){
-
-    document.getElementById("guessed").textContent =
-        guessedLetters.length
-        ? "Guessed: " + guessedLetters.join(", ")
-        : "Guessed: None";
-}
-
-
-/* =========================
-   STATS
-========================= */
-
-function updateStats(){
-
-    document.getElementById("lives").textContent =
-        "❤️ " + lives;
-
-    document.getElementById("score").textContent =
-        score;
-}
-
-
-/* =========================
-   GUESS LETTER
-========================= */
-
-function guessLetter(){
-
-    const input =
-        document.getElementById("letterInput");
-
-    const letter =
-        input.value.toUpperCase().trim();
-
-    if(!/^[A-Z]$/.test(letter)){
-
-        showMessage("Please enter one letter A-Z.");
-
-        input.value = "";
-        return;
-    }
-
-    if(guessedLetters.includes(letter)){
-
-        showMessage(
-            "You already guessed " + letter + "!"
-        );
-
-        input.value = "";
-        return;
-    }
-
-    guessedLetters.push(letter);
-
-    const answer =
-        questions[currentQuestion]
-            .answer
-            .toUpperCase();
-
-    let found = false;
-
-    let newAnswer =
-        hiddenAnswer.split("");
-
-    for(let i = 0; i < answer.length; i++){
-
-        if(answer[i] === letter){
-
-            newAnswer[i] = letter;
-
-            found = true;
-        }
-    }
-
-    hiddenAnswer = newAnswer.join("");
-
-    if(found){
-
-        score += 5;
-
-        showMessage(
-            "✅ Correct! +5 points"
-        );
-
-    }else{
-
-        lives--;
-
-        showMessage(
-            "❌ Wrong guess!"
-        );
-    }
-
-    updateAnswer();
-    updateGuessedLetters();
-    updateStats();
-    drawHangman();
-
-    input.value = "";
-
-    if(hiddenAnswer === answer){
-
-        setTimeout(
-            nextQuestion,
-            800
-        );
-
-        return;
-    }
-
-    if(lives <= 0){
-
-        setTimeout(
-            gameOver,
-            800
-        );
-    }
-}
-
-
-/* =========================
-   NEXT QUESTION
-========================= */
-
-function nextQuestion(){
-
-    currentQuestion++;
-
-    if(currentQuestion >= questions.length){
-
-        finishGame();
-
-    }else{
-
-        loadQuestion();
-    }
-}
-
-
-/* =========================
-   GAME OVER
-========================= */
-
-function gameOver(){
-
-    const answer =
-        questions[currentQuestion].answer;
-
-    showMessage(
-        "Game Over! Answer: " + answer
-    );
-
-    setTimeout(
-        finishGame,
-        1200
-    );
-}
-
-
-/* =========================
-   FINISH GAME
-========================= */
-
-function finishGame(){
-
-    document.getElementById("finalScore").textContent =
-        score + " Points";
-
-    document.getElementById("resultMessage").textContent =
-        "Great job! You completed the quiz.";
-
-    showScreen("resultScreen");
-}
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-function showMessage(message){
-
-    document.getElementById("message").textContent =
-        message;
-}
-
-
-/* =========================
-   INSTRUCTIONS
-========================= */
-
-function showInstructions(){
-
-    showScreen("instructionScreen");
-}
-
-
-/* =========================
-   EXIT
-========================= */
-
-function exitGame(){
-
-    alert(
-        "Thanks for playing Hangman Quiz!"
-    );
-}
-
-
-/* =========================
-   HANGMAN DRAWING
-========================= */
-
-function drawHangman(){
-
-    const canvas =
-        document.getElementById("hangmanCanvas");
-
-    const ctx =
-        canvas.getContext("2d");
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "white";
-    ctx.lineCap = "round";
-
-    ctx.beginPath();
-
-    /* Base */
-    ctx.moveTo(30,220);
-    ctx.lineTo(210,220);
-
-    /* Pole */
-    ctx.moveTo(70,220);
-    ctx.lineTo(70,30);
-
-    /* Top */
-    ctx.lineTo(170,30);
-
-    /* Rope */
-    ctx.lineTo(170,60);
-
-    ctx.stroke();
-
-    const wrong = 5 - lives;
-
-
-    /* Head */
-    if(wrong >= 1){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            170,
-            85,
-            25,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-    }
-
-
-    /* Body */
-    if(wrong >= 2){
-
-        ctx.beginPath();
-
-        ctx.moveTo(170,110);
-        ctx.lineTo(170,165);
-
-        ctx.stroke();
-    }
-
-
-    /* Left Arm */
-    if(wrong >= 3){
-
-        ctx.beginPath();
-
-        ctx.moveTo(170,125);
-        ctx.lineTo(135,150);
-
-        ctx.stroke();
-    }
-
-
-    /* Right Arm */
-    if(wrong >= 4){
-
-        ctx.beginPath();
-
-        ctx.moveTo(170,125);
-        ctx.lineTo(205,150);
-
-        ctx.stroke();
-    }
-
-
-    /* Legs */
-    if(wrong >= 5){
-
-        ctx.beginPath();
-
-        ctx.moveTo(170,165);
-        ctx.lineTo(140,200);
-
-        ctx.moveTo(170,165);
-        ctx.lineTo(200,200);
-
-        ctx.stroke();
-    }
-}
-
-
-/* =========================
-   ENTER KEY
-========================= */
-
-document
-    .getElementById("letterInput")
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(event.key === "Enter"){
-
-                guessLetter();
+    <script>
+
+        /* =========================
+           QUIZ QUESTIONS
+        ========================== */
+
+        const questions = [
+
+            {
+                category: "Programming",
+                question: "Which programming language is commonly used for OOP?",
+                answer: "C++"
+            },
+
+            {
+                category: "OOP",
+                question: "Which OOP concept hides internal implementation details?",
+                answer: "ENCAPSULATION"
+            },
+
+            {
+                category: "OOP",
+                question: "Which concept allows one class to acquire properties of another class?",
+                answer: "INHERITANCE"
+            },
+
+            {
+                category: "Programming",
+                question: "Which keyword is used to create an object dynamically in C++?",
+                answer: "NEW"
+            },
+
+            {
+                category: "OOP",
+                question: "Which OOP concept allows the same function name to have different behavior?",
+                answer: "POLYMORPHISM"
             }
-        }
-    );
 
-</script>
+        ];
+
+
+        /* =========================
+           GAME VARIABLES
+        ========================== */
+
+        let currentQuestion = 0;
+
+        let score = 0;
+
+        let lives = 5;
+
+        let guessedLetters = [];
+
+        let hiddenAnswer = "";
+
+
+        /* =========================
+           SCREEN FUNCTION
+        ========================== */
+
+        function showScreen(screenId) {
+
+            document
+                .querySelectorAll(".screen")
+                .forEach(screen => {
+
+                    screen.classList.remove("active");
+
+                });
+
+
+            document
+                .getElementById(screenId)
+                .classList.add("active");
+
+        }
+
+
+        /* =========================
+           START GAME
+        ========================== */
+
+        function startGame() {
+
+            currentQuestion = 0;
+
+            score = 0;
+
+            showScreen("gameScreen");
+
+            loadQuestion();
+
+        }
+
+
+        /* =========================
+           LOAD QUESTION
+        ========================== */
+
+        function loadQuestion() {
+
+            if (currentQuestion >= questions.length) {
+
+                finishGame();
+
+                return;
+            }
+
+
+            lives = 5;
+
+            guessedLetters = [];
+
+
+            const q = questions[currentQuestion];
+
+
+            document.getElementById("questionNumber").textContent =
+                `${currentQuestion + 1}/${questions.length}`;
+
+
+            document.getElementById("category").textContent =
+                q.category;
+
+
+            document.getElementById("question").textContent =
+                q.question;
+
+
+            hiddenAnswer = q.answer
+                .split("")
+                .map(() => "_")
+                .join("");
+
+
+            updateAnswer();
+
+            updateGuessedLetters();
+
+            updateStats();
+
+
+            document.getElementById("message").textContent = "";
+
+
+            document.getElementById("letterInput").value = "";
+
+
+            drawHangman();
+
+
+            setTimeout(() => {
+
+                document
+                    .getElementById("letterInput")
+                    .focus();
+
+            }, 100);
+
+        }
+
+
+        /* =========================
+           UPDATE ANSWER
+        ========================== */
+
+        function updateAnswer() {
+
+            document.getElementById("answer").textContent =
+                hiddenAnswer
+                    .split("")
+                    .join(" ");
+
+        }
+
+
+        /* =========================
+           GUESSED LETTERS
+        ========================== */
+
+        function updateGuessedLetters() {
+
+            document.getElementById("guessed").textContent =
+
+                guessedLetters.length
+
+                    ? "Guessed: " + guessedLetters.join(", ")
+
+                    : "Guessed: None";
+
+        }
+
+
+        /* =========================
+           UPDATE STATS
+        ========================== */
+
+        function updateStats() {
+
+            document.getElementById("lives").textContent =
+                "❤️ " + lives;
+
+
+            document.getElementById("score").textContent =
+                score;
+
+        }
+
+
+        /* =========================
+           GUESS LETTER
+        ========================== */
+
+        function guessLetter() {
+
+            const input =
+                document.getElementById("letterInput");
+
+
+            const letter =
+                input.value.toUpperCase().trim();
+
+
+            /*
+             Allow A-Z and +
+            */
+
+            if (!/^[A-Z+]$/.test(letter)) {
+
+                showMessage(
+                    "Please enter one letter A-Z or +."
+                );
+
+                input.value = "";
+
+                return;
+            }
+
+
+            /*
+             IMPORTANT:
+             A-Z cannot be guessed twice.
+             But + can be guessed twice because C++ has two + symbols.
+            */
+
+            if (
+                letter !== "+" &&
+                guessedLetters.includes(letter)
+            ) {
+
+                showMessage(
+                    "You already guessed " + letter + "!"
+                );
+
+                input.value = "";
+
+                return;
+            }
+
+
+            /*
+             Store the guessed character
+            */
+
+            guessedLetters.push(letter);
+
+
+            const answer =
+                questions[currentQuestion]
+                    .answer
+                    .toUpperCase();
+
+
+            let found = false;
+
+
+            let newAnswer =
+                hiddenAnswer.split("");
+
+
+            /*
+             Check answer characters
+            */
+
+            for (
+                let i = 0;
+                i < answer.length;
+                i++
+            ) {
+
+                if (answer[i] === letter) {
+
+                    newAnswer[i] = letter;
+
+                    found = true;
+
+                }
+
+            }
+
+
+            hiddenAnswer =
+                newAnswer.join("");
+
+
+            /*
+             Correct answer
+            */
+
+            if (found) {
+
+                score += 5;
+
+
+                showMessage(
+                    "✅ Correct! +5 points"
+                );
+
+            }
+
+            /*
+             Wrong answer
+            */
+
+            else {
+
+                lives--;
+
+
+                showMessage(
+                    "❌ Wrong guess!"
+                );
+
+            }
+
+
+            updateAnswer();
+
+            updateGuessedLetters();
+
+            updateStats();
+
+            drawHangman();
+
+
+            input.value = "";
+
+
+            /*
+             Check if answer completed
+            */
+
+            if (hiddenAnswer === answer) {
+
+                showMessage(
+                    "🎉 Correct Answer!"
+                );
+
+
+                setTimeout(
+                    nextQuestion,
+                    1000
+                );
+
+
+                return;
+            }
+
+
+            /*
+             Check lives
+            */
+
+            if (lives <= 0) {
+
+                setTimeout(
+                    gameOver,
+                    800
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           NEXT QUESTION
+        ========================== */
+
+        function nextQuestion() {
+
+            currentQuestion++;
+
+
+            if (
+                currentQuestion >=
+                questions.length
+            ) {
+
+                finishGame();
+
+            }
+
+            else {
+
+                loadQuestion();
+
+            }
+
+        }
+
+
+        /* =========================
+           GAME OVER
+        ========================== */
+
+        function gameOver() {
+
+            const answer =
+                questions[currentQuestion].answer;
+
+
+            showMessage(
+                "Game Over! Answer: " + answer
+            );
+
+
+            setTimeout(
+                finishGame,
+                1200
+            );
+
+        }
+
+
+        /* =========================
+           FINISH GAME
+        ========================== */
+
+        function finishGame() {
+
+            document.getElementById("finalScore").textContent =
+                score + " Points";
+
+
+            document.getElementById("resultMessage").textContent =
+                "Great job! You completed the quiz.";
+
+
+            showScreen("resultScreen");
+
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        function showMessage(message) {
+
+            document.getElementById("message").textContent =
+                message;
+
+        }
+
+
+        /* =========================
+           INSTRUCTIONS
+        ========================== */
+
+        function showInstructions() {
+
+            showScreen("instructionScreen");
+
+        }
+
+
+        /* =========================
+           EXIT
+        ========================== */
+
+        function exitGame() {
+
+            alert(
+                "Thanks for playing Hangman Quiz!"
+            );
+
+        }
+
+
+        /* =========================
+           HANGMAN DRAWING
+        ========================== */
+
+        function drawHangman() {
+
+            const canvas =
+                document.getElementById("hangmanCanvas");
+
+
+            const ctx =
+                canvas.getContext("2d");
+
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            ctx.lineWidth = 5;
+
+            ctx.strokeStyle = "white";
+
+            ctx.lineCap = "round";
+
+
+            ctx.beginPath();
+
+
+            /* Base */
+
+            ctx.moveTo(30, 220);
+
+            ctx.lineTo(210, 220);
+
+
+            /* Pole */
+
+            ctx.moveTo(70, 220);
+
+            ctx.lineTo(70, 30);
+
+
+            /* Top */
+
+            ctx.lineTo(170, 30);
+
+
+            /* Rope */
+
+            ctx.lineTo(170, 60);
+
+
+            ctx.stroke();
+
+
+            const wrong =
+                5 - lives;
+
+
+            /* Head */
+
+            if (wrong >= 1) {
+
+                ctx.beginPath();
+
+
+                ctx.arc(
+                    170,
+                    85,
+                    25,
+                    0,
+                    Math.PI * 2
+                );
+
+
+                ctx.stroke();
+
+            }
+
+
+            /* Body */
+
+            if (wrong >= 2) {
+
+                ctx.beginPath();
+
+
+                ctx.moveTo(170, 110);
+
+                ctx.lineTo(170, 165);
+
+
+                ctx.stroke();
+
+            }
+
+
+            /* Left Arm */
+
+            if (wrong >= 3) {
+
+                ctx.beginPath();
+
+
+                ctx.moveTo(170, 125);
+
+                ctx.lineTo(135, 150);
+
+
+                ctx.stroke();
+
+            }
+
+
+            /* Right Arm */
+
+            if (wrong >= 4) {
+
+                ctx.beginPath();
+
+
+                ctx.moveTo(170, 125);
+
+                ctx.lineTo(205, 150);
+
+
+                ctx.stroke();
+
+            }
+
+
+            /* Legs */
+
+            if (wrong >= 5) {
+
+                ctx.beginPath();
+
+
+                ctx.moveTo(170, 165);
+
+                ctx.lineTo(140, 200);
+
+
+                ctx.moveTo(170, 165);
+
+                ctx.lineTo(200, 200);
+
+
+                ctx.stroke();
+
+            }
+
+        }
+
+
+        /* =========================
+           ENTER KEY
+        ========================== */
+
+        document
+            .getElementById("letterInput")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        guessLetter();
+
+                    }
+
+                }
+            );
+
+    </script>
 
 </body>
+
 </html>
