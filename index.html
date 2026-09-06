@@ -1,210 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BOOM BLASTIC - C++ Hangman Quiz</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%,#312e81 0%,transparent 30%),
+        radial-gradient(circle at 80% 80%,#164e63 0%,transparent 30%),
+        linear-gradient(135deg,#020617,#0f172a,#111827);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    overflow-x:hidden;
+}
+
+.container{
+    width:min(1100px,100%);
+    min-height:650px;
+    position:relative;
+    border:1px solid #334155;
+    border-radius:30px;
+    padding:25px;
+    background:rgba(15,23,42,.88);
+    backdrop-filter:blur(18px);
+    box-shadow:
+        0 0 25px #7c3aed66,
+        0 0 70px #06b6d433,
+        inset 0 0 50px #ffffff05;
+    overflow:hidden;
+}
+
+.container::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:#06b6d4;
+    filter:blur(120px);
+    opacity:.12;
+    top:-120px;
+    left:-100px;
+}
+
+.container::after{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:#a855f7;
+    filter:blur(120px);
+    opacity:.12;
+    bottom:-120px;
+    right:-100px;
+}
+
+.screen{
+    display:none;
+    position:relative;
+    z-index:2;
+}
+
+.screen.active{
+    display:block;
+}
+
+/* MENU */
+
+.menu{
+    min-height:590px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.logo{
+    font-size:clamp(38px,8vw,75px);
+    font-weight:1000;
+    letter-spacing:4px;
+    background:linear-gradient(90deg,#22d3ee,#a855f7,#ec4899,#facc15);
+    -webkit-background-clip:text;
+    color:transparent;
+    text-shadow:0 0 30px #22d3ee44;
+}
+
+.subtitle{
+    margin-top:8px;
+    color:#94a3b8;
+    letter-spacing:4px;
+    font-size:14px;
+}
+
+.menu-buttons{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:35px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    color:white;
+    font-weight:800;
+    font-size:16px;
+    border-radius:14px;
+    padding:14px 25px;
+    transition:.2s;
+}
+
+button:hover{
+    transform:translateY(-3px) scale(1.02);
+}
+
+.start-btn{
+    background:linear-gradient(135deg,#06b6d4,#2563eb);
+    box-shadow:0 0 25px #06b6d455;
+}
+
+.info-btn{
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+}
+
+.exit-btn{
+    background:#334155;
+}
+
+/* ROBOT */
+
+.robot-area{
+    margin-top:25px;
+    position:relative;
+}
+
+.robot{
+    width:100px;
+    height:90px;
+    margin:auto;
+    position:relative;
+    animation:dance .8s infinite alternate ease-in-out;
+}
+
+.robot-head{
+    width:80px;
+    height:65px;
+    position:absolute;
+    left:10px;
+    top:15px;
+    border-radius:20px;
+    background:linear-gradient(145deg,#e2e8f0,#64748b);
+    border:4px solid #22d3ee;
+    box-shadow:0 0 20px #22d3ee99;
+}
+
+.eye{
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#22d3ee;
+    top:22px;
+    box-shadow:0 0 12px #22d3ee;
+}
+
+.eye.left{left:17px}
+.eye.right{right:17px}
+
+.mouth{
+    position:absolute;
+    width:30px;
+    height:8px;
+    border-bottom:4px solid #0f172a;
+    left:21px;
+    bottom:14px;
+    border-radius:50%;
+}
+
+.antenna{
+    position:absolute;
+    width:5px;
+    height:18px;
+    background:#22d3ee;
+    top:-17px;
+    left:48px;
+}
+
+.antenna::after{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#facc15;
+    position:absolute;
+    left:-2px;
+    top:-6px;
+    box-shadow:0 0 15px #facc15;
+}
+
+@keyframes dance{
+    from{transform:rotate(-4deg) translateY(0)}
+    to{transform:rotate(4deg) translateY(-8px)}
+}
+
+.avatar-message{
+    margin-top:10px;
+    display:inline-block;
+    padding:10px 16px;
+    border-radius:15px;
+    background:#1e293b;
+    border:1px solid #475569;
+    color:#e2e8f0;
+    font-size:14px;
+}
+
+/* GAME */
+
+.game-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.game-title{
+    font-size:28px;
+    font-weight:900;
+}
+
+.badges{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    padding:9px 14px;
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:12px;
+    font-size:14px;
+}
+
+.progress-box{
+    height:10px;
+    background:#1e293b;
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.progress{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#22d3ee,#a855f7,#ec4899);
+    box-shadow:0 0 15px #22d3ee;
+    transition:.5s;
+}
+
+.game-grid{
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    gap:25px;
+}
+
+.card{
+    background:rgba(2,6,23,.65);
+    border:1px solid #334155;
+    border-radius:22px;
+    padding:25px;
+    box-shadow:inset 0 0 25px #ffffff03;
+}
+
+canvas{
+    width:100%;
+    max-width:300px;
+    height:auto;
+    display:block;
+    margin:auto;
+    border-radius:15px;
+}
+
+.category{
+    display:inline-block;
+    padding:7px 12px;
+    background:#312e81;
+    border:1px solid #6366f1;
+    color:#c4b5fd;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.question{
+    font-size:24px;
+    line-height:1.4;
+    font-weight:800;
+}
+
+.answer{
+    margin:25px 0;
+    font-size:30px;
+    letter-spacing:8px;
+    text-align:center;
+    color:#22d3ee;
+    font-weight:900;
+    min-height:45px;
+    word-break:break-all;
+}
+
+.input-row{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    min-width:0;
+    padding:15px;
+    border-radius:12px;
+    border:2px solid #334155;
+    background:#020617;
+    color:white;
+    font-size:20px;
+    text-align:center;
+    outline:none;
+}
+
+input:focus{
+    border-color:#22d3ee;
+    box-shadow:0 0 15px #22d3ee44;
+}
+
+.guess-btn{
+    background:linear-gradient(135deg,#ec4899,#7c3aed);
+}
+
+.message{
+    min-height:28px;
+    margin-top:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.guessed{
+    margin-top:15px;
+    color:#94a3b8;
+    font-size:14px;
+    word-break:break-word;
+}
+
+/* INSTRUCTIONS */
+
+.instruction-screen{
+    min-height:590px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.instruction-screen h2{
+    font-size:40px;
+    margin-bottom:20px;
+    color:#22d3ee;
+}
+
+.instructions{
+    display:grid;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.instruction{
+    padding:15px;
+    background:#1e293b;
+    border-radius:12px;
+    border-left:4px solid #22d3ee;
+}
+
+.back-btn{
+    background:#334155;
+}
+
+/* RESULT */
+
+.result{
+    min-height:590px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.result h2{
+    font-size:55px;
+    color:#facc15;
+}
+
+.final-score{
+    margin:20px;
+    font-size:50px;
+    font-weight:1000;
+    color:#22d3ee;
+}
+
+.result-message{
+    color:#cbd5e1;
+    max-width:600px;
+    line-height:1.6;
+}
+
+.play-again{
+    margin-top:30px;
+    background:linear-gradient(135deg,#06b6d4,#7c3aed);
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+    .game-grid{
+        grid-template-columns:1fr;
+    }
+
+    .question{
+        font-size:20px;
+    }
+
+    .answer{
+        font-size:23px;
+        letter-spacing:5px;
+    }
+
+    .container{
+        padding:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- MENU -->
+    <section id="menuScreen" class="screen active">
+
+        <div class="menu">
+
+            <div class="logo">BOOM BLASTIC</div>
+
+            <div class="subtitle">
+                C++ • OOP • HANGMAN QUIZ
+            </div>
+
+            <div class="robot-area">
+
+                <div class="robot">
+
+                    <div class="antenna"></div>
+
+                    <div class="robot-head">
+
+                        <div class="eye left"></div>
+                        <div class="eye right"></div>
+
+                        <div class="mouth"></div>
+
+                    </div>
+
+                </div>
+
+                <div id="avatarMessage" class="avatar-message">
+                    Ready for the challenge? 🤖
+                </div>
+
+            </div>
+
+            <div class="menu-buttons">
+
+                <button class="start-btn" onclick="startGame()">
+                    🚀 START GAME
+                </button>
+
+                <button class="info-btn" onclick="showInstructions()">
+                    📖 HOW TO PLAY
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- INSTRUCTIONS -->
+    <section id="instructionScreen" class="screen">
+
+        <div class="instruction-screen">
+
+            <h2>How To Play</h2>
+
+            <div class="instructions">
+
+                <div class="instruction">
+                    🎯 Guess the hidden C++ / OOP answer one character at a time.
+                </div>
+
+                <div class="instruction">
+                    ❤️ You get 5 lives for every question.
+                </div>
+
+                <div class="instruction">
+                    ⭐ Correct character = +5 points.
+                </div>
+
+                <div class="instruction">
+                    💥 Wrong character = -1 life.
+                </div>
+
+                <div class="instruction">
+                    🧠 Complete the answer to move to the next question.
+                </div>
+
+                <div class="instruction">
+                    🏆 Complete all 20 questions and see your final score.
+                </div>
+
+            </div>
+
+            <button class="back-btn" onclick="showScreen('menuScreen')">
+                ← BACK
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- GAME -->
+    <section id="gameScreen" class="screen">
+
+        <div class="game-header">
+
+            <div class="game-title">
+                BOOM BLASTIC
+            </div>
+
+            <div class="badges">
+
+                <div class="badge">
+                    Question:
+                    <span id="questionNumber">1/20</span>
+                </div>
+
+                <div class="badge">
+                    ❤️ <span id="lives">5</span>
+                </div>
+
+                <div class="badge">
+                    ⭐ <span id="score">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="progress-box">
+            <div id="progress" class="progress"></div>
+        </div>
+
+
+        <div class="game-grid">
+
+            <div class="card">
+
+                <canvas
+                    id="hangmanCanvas"
+                    width="240"
+                    height="250">
+                </canvas>
+
+                <div id="gameAvatar" class="avatar-message">
+                    🤖 Keep going!
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div id="category" class="category">
+                    OOP
+                </div>
+
+                <div id="question" class="question">
+                    Loading question...
+                </div>
+
+                <div id="answer" class="answer">
+                    _ _ _ _
+                </div>
+
+                <div class="input-row">
+
+                    <input
+                        id="letterInput"
+                        type="text"
+                        maxlength="1"
+                        autocomplete="off"
+                        placeholder="A-Z"
+                        aria-label="Enter a character">
+
+                    <button
+                        class="guess-btn"
+                        onclick="guessLetter()">
+                        GUESS
+                    </button>
+
+                </div>
+
+                <div id="message" class="message"></div>
+
+                <div id="guessed" class="guessed">
+                    Guessed: None
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESULT -->
+    <section id="resultScreen" class="screen">
+
+        <div class="result">
+
+            <h2>GAME COMPLETE!</h2>
+
+            <div class="final-score" id="finalScore">
+                0 Points
+            </div>
+
+            <div id="resultMessage" class="result-message">
+                Great job!
+            </div>
+
+            <button class="play-again" onclick="startGame()">
+                🔄 PLAY AGAIN
+            </button>
+
+            <button
+                class="back-btn"
+                style="margin-top:12px"
+                onclick="showScreen('menuScreen')">
+                🏠 MAIN MENU
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+
 <script>
 
-/* =====================================================
-   BOOM BLASTIC HANGMAN QUIZ
-   FINAL JAVASCRIPT
-===================================================== */
-
-
-/* =====================================================
-   QUESTION BANK - 20 QUESTIONS
-===================================================== */
+/* ===============================
+   QUESTION BANK
+================================ */
 
 const questions = [
 
     {
-        category: "C++",
-        question: "Which programming language is commonly used for Object-Oriented Programming?",
-        answer: "C++"
+        category:"C++",
+        question:"Which programming language is commonly used for Object-Oriented Programming?",
+        answer:"C++"
     },
 
     {
-        category: "OOP",
-        question: "Which OOP concept hides internal implementation details?",
-        answer: "ENCAPSULATION"
+        category:"OOP",
+        question:"Which OOP concept hides internal implementation details?",
+        answer:"ENCAPSULATION"
     },
 
     {
-        category: "OOP",
-        question: "Which feature allows a child class to use parent class members?",
-        answer: "INHERITANCE"
+        category:"OOP",
+        question:"Which feature allows a child class to use parent class members?",
+        answer:"INHERITANCE"
     },
 
     {
-        category: "C++",
-        question: "Which keyword is used to create an object dynamically in C++?",
-        answer: "NEW"
+        category:"C++",
+        question:"Which keyword is used to create an object dynamically in C++?",
+        answer:"NEW"
     },
 
     {
-        category: "OOP",
-        question: "Which OOP concept allows the same function name to have different behavior?",
-        answer: "POLYMORPHISM"
+        category:"OOP",
+        question:"Which OOP concept allows the same function name to have different behavior?",
+        answer:"POLYMORPHISM"
     },
 
     {
-        category: "OOP",
-        question: "What is a blueprint for creating objects called?",
-        answer: "CLASS"
+        category:"OOP",
+        question:"What is a blueprint for creating objects called?",
+        answer:"CLASS"
     },
 
     {
-        category: "OOP",
-        question: "What is an instance of a class called?",
-        answer: "OBJECT"
+        category:"OOP",
+        question:"What is an instance of a class called?",
+        answer:"OBJECT"
     },
 
     {
-        category: "OOP",
-        question: "Which concept exposes only the necessary information?",
-        answer: "ABSTRACTION"
+        category:"OOP",
+        question:"Which concept exposes only the necessary information?",
+        answer:"ABSTRACTION"
     },
 
     {
-        category: "C++",
-        question: "Which keyword is used to define a class in C++?",
-        answer: "CLASS"
+        category:"C++",
+        question:"Which keyword is used to define a class in C++?",
+        answer:"CLASS"
     },
 
     {
-        category: "C++",
-        question: "Which keyword creates a constant variable in C++?",
-        answer: "CONST"
+        category:"C++",
+        question:"Which keyword creates a constant variable in C++?",
+        answer:"CONST"
     },
 
     {
-        category: "OOP",
-        question: "What is the process of creating an object from a class?",
-        answer: "INSTANTIATION"
+        category:"OOP",
+        question:"What is the process of creating an object from a class?",
+        answer:"INSTANTIATION"
     },
 
     {
-        category: "OOP",
-        question: "Which special function is automatically called when an object is created?",
-        answer: "CONSTRUCTOR"
+        category:"OOP",
+        question:"Which special function is automatically called when an object is created?",
+        answer:"CONSTRUCTOR"
     },
 
     {
-        category: "OOP",
-        question: "Which special function is called when an object is destroyed?",
-        answer: "DESTRUCTOR"
+        category:"OOP",
+        question:"Which special function is called when an object is destroyed?",
+        answer:"DESTRUCTOR"
     },
 
     {
-        category: "C++",
-        question: "Which keyword refers to the current object?",
-        answer: "THIS"
+        category:"C++",
+        question:"Which keyword refers to the current object?",
+        answer:"THIS"
     },
 
     {
-        category: "C++",
-        question: "Which access specifier makes members accessible from outside the class?",
-        answer: "PUBLIC"
+        category:"C++",
+        question:"Which access specifier makes members accessible from outside the class?",
+        answer:"PUBLIC"
     },
 
     {
-        category: "C++",
-        question: "Which access specifier restricts members to the class itself?",
-        answer: "PRIVATE"
+        category:"C++",
+        question:"Which access specifier restricts members to the class itself?",
+        answer:"PRIVATE"
     },
 
     {
-        category: "OOP",
-        question: "What is defining multiple functions with the same name but different parameters called?",
-        answer: "OVERLOADING"
+        category:"OOP",
+        question:"What is defining multiple functions with the same name but different parameters called?",
+        answer:"OVERLOADING"
     },
 
     {
-        category: "OOP",
-        question: "What is redefining a parent class method in a child class called?",
-        answer: "OVERRIDING"
+        category:"OOP",
+        question:"What is redefining a parent class method in a child class called?",
+        answer:"OVERRIDING"
     },
 
     {
-        category: "OOP",
-        question: "Which concept represents the creation of an object from a class?",
-        answer: "INSTANTIATION"
+        category:"OOP",
+        question:"Which access specifier allows derived classes to access members while restricting general outside access?",
+        answer:"PROTECTED"
     },
 
     {
-        category: "C++",
-        question: "Which keyword allows a member function to be overridden at runtime?",
-        answer: "VIRTUAL"
+        category:"C++",
+        question:"Which keyword allows a member function to be overridden at runtime?",
+        answer:"VIRTUAL"
     }
 
 ];
 
 
-/* =====================================================
+/* ===============================
    GAME VARIABLES
-===================================================== */
+================================ */
 
-let gameQuestions = [];
-
-let currentQuestion = 0;
-
-let score = 0;
-
-let lives = 5;
-
-let guessedLetters = [];
-
-let hiddenAnswer = "";
-
-let gameFinished = false;
-
-let transitioning = false;
+let gameQuestions=[];
+let currentQuestion=0;
+let score=0;
+let lives=5;
+let guessedLetters=[];
+let hiddenAnswer="";
+let gameFinished=false;
+let transitioning=false;
 
 
-/* =====================================================
+/* ===============================
    AUDIO
-===================================================== */
+================================ */
 
-let audioContext = null;
+let audioContext=null;
 
 function getAudio(){
 
     if(!audioContext){
 
-        const AudioClass =
+        const AudioClass=
             window.AudioContext ||
             window.webkitAudioContext;
 
-        if(!AudioClass){
-            return null;
-        }
+        if(!AudioClass) return null;
 
-        audioContext = new AudioClass();
+        audioContext=new AudioClass();
     }
 
     return audioContext;
 }
 
-
 function playTone(
     frequency,
     duration,
-    type = "sine",
-    volume = 0.12
+    type="sine",
+    volume=.1
 ){
 
     try{
 
-        const audio = getAudio();
+        const audio=getAudio();
 
         if(!audio) return;
 
-        if(audio.state === "suspended"){
+        if(audio.state==="suspended"){
             audio.resume();
         }
 
-        const oscillator =
-            audio.createOscillator();
+        const oscillator=audio.createOscillator();
+        const gain=audio.createGain();
 
-        const gain =
-            audio.createGain();
-
-        oscillator.type = type;
+        oscillator.type=type;
 
         oscillator.frequency.setValueAtTime(
             frequency,
@@ -212,1022 +880,610 @@ function playTone(
         );
 
         gain.gain.setValueAtTime(
-            0.001,
+            .001,
             audio.currentTime
         );
 
         gain.gain.exponentialRampToValueAtTime(
             volume,
-            audio.currentTime + 0.02
+            audio.currentTime+.02
         );
 
         gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audio.currentTime + duration
+            .001,
+            audio.currentTime+duration
         );
 
         oscillator.connect(gain);
-
         gain.connect(audio.destination);
 
         oscillator.start();
-
         oscillator.stop(
-            audio.currentTime + duration
+            audio.currentTime+duration
         );
 
-    }catch(error){
-
-        console.log("Audio unavailable");
-
-    }
+    }catch(e){}
 }
-
 
 function playSound(type){
 
-    try{
+    if(type==="click"){
+        playTone(500,.08,"sine",.06);
+    }
 
-        if(type === "click"){
+    if(type==="correct"){
 
-            playTone(
-                500,
-                0.08,
-                "sine",
-                0.08
-            );
+        playTone(700,.12,"sine",.1);
 
-        }
-
-
-        if(type === "correct"){
-
-            playTone(
-                700,
-                0.12,
-                "sine",
-                0.12
-            );
-
-            setTimeout(() => {
-
-                playTone(
-                    950,
-                    0.16,
-                    "sine",
-                    0.10
-                );
-
-            },100);
-
-        }
-
-
-        if(type === "wrong"){
-
-            playTone(
-                180,
-                0.22,
-                "sawtooth",
-                0.08
-            );
-
-        }
-
-
-        if(type === "win"){
-
-            playTone(
-                600,
-                0.15,
-                "sine",
-                0.12
-            );
-
-            setTimeout(() => {
-
-                playTone(
-                    800,
-                    0.15,
-                    "sine",
-                    0.12
-                );
-
-            },120);
-
-            setTimeout(() => {
-
-                playTone(
-                    1100,
-                    0.30,
-                    "sine",
-                    0.14
-                );
-
-            },240);
-
-        }
-
-    }catch(error){
-
-        console.log("Sound error");
+        setTimeout(()=>{
+            playTone(950,.16,"sine",.08);
+        },100);
 
     }
 
+    if(type==="wrong"){
+        playTone(180,.2,"sawtooth",.06);
+    }
+
+    if(type==="win"){
+
+        playTone(600,.15,"sine",.1);
+
+        setTimeout(()=>{
+            playTone(800,.15,"sine",.1);
+        },120);
+
+        setTimeout(()=>{
+            playTone(1100,.3,"sine",.12);
+        },240);
+
+    }
 }
 
 
-/* =====================================================
+/* ===============================
    SHUFFLE
-===================================================== */
+================================ */
 
 function shuffleQuestions(){
 
-    gameQuestions = [...questions];
+    gameQuestions=[...questions];
 
-    for(
-        let i = gameQuestions.length - 1;
-        i > 0;
-        i--
-    ){
+    for(let i=gameQuestions.length-1;i>0;i--){
 
-        const j =
-            Math.floor(
-                Math.random() * (i + 1)
-            );
+        const j=Math.floor(
+            Math.random()*(i+1)
+        );
 
         [
             gameQuestions[i],
             gameQuestions[j]
-        ] =
-        [
+        ]=[
             gameQuestions[j],
             gameQuestions[i]
         ];
-
     }
-
 }
 
 
-/* =====================================================
-   SCREEN SYSTEM
-===================================================== */
+/* ===============================
+   SCREEN
+================================ */
 
-function showScreen(screenId){
+function showScreen(id){
 
     document
         .querySelectorAll(".screen")
-        .forEach(screen => {
-
+        .forEach(screen=>{
             screen.classList.remove("active");
-
         });
 
-
-    const target =
-        document.getElementById(screenId);
-
+    const target=document.getElementById(id);
 
     if(target){
-
         target.classList.add("active");
-
     }
-
 }
 
 
-/* =====================================================
-   START GAME
-===================================================== */
+/* ===============================
+   START
+================================ */
 
 function startGame(){
 
     playSound("click");
 
-    currentQuestion = 0;
-
-    score = 0;
-
-    lives = 5;
-
-    guessedLetters = [];
-
-    hiddenAnswer = "";
-
-    gameFinished = false;
-
-    transitioning = false;
+    currentQuestion=0;
+    score=0;
+    lives=5;
+    guessedLetters=[];
+    hiddenAnswer="";
+    gameFinished=false;
+    transitioning=false;
 
     shuffleQuestions();
 
     showScreen("gameScreen");
 
-    avatarMessage(
-        "BOOM! Let's start! 🔥"
-    );
+    avatarMessage("BOOM! Let's start! 🔥");
 
     loadQuestion();
-
 }
 
 
-/* =====================================================
+/* ===============================
    LOAD QUESTION
-===================================================== */
+================================ */
 
 function loadQuestion(){
 
-    if(
-        currentQuestion >=
-        gameQuestions.length
-    ){
+    if(currentQuestion>=gameQuestions.length){
 
         finishGame();
-
         return;
     }
 
+    lives=5;
+    guessedLetters=[];
+    transitioning=false;
 
-    lives = 5;
+    const q=gameQuestions[currentQuestion];
 
-    guessedLetters = [];
+    document.getElementById("questionNumber")
+        .textContent=
+        `${currentQuestion+1}/${gameQuestions.length}`;
 
-    transitioning = false;
+    document.getElementById("category")
+        .textContent=q.category;
 
+    document.getElementById("question")
+        .textContent=q.question;
 
-    const q =
-        gameQuestions[currentQuestion];
-
-
-    document
-        .getElementById("questionNumber")
-        .textContent =
-        `${currentQuestion + 1}/${gameQuestions.length}`;
-
-
-    document
-        .getElementById("category")
-        .textContent =
-        q.category;
-
-
-    document
-        .getElementById("question")
-        .textContent =
-        q.question;
-
-
-    /*
-       Hide letters.
-
-       C++ becomes:
-       _ _ _ _
-
-       Alphabetic answers become:
-       _ _ _ _ _ _
-
-       C++ is special because + must also
-       be guessed.
-    */
-
-    hiddenAnswer =
-        q.answer
-            .split("")
-            .map(character => {
-
-                if(character === " "){
-                    return " ";
-                }
-
-                return "_";
-
-            })
-            .join("");
-
+    hiddenAnswer=q.answer
+        .split("")
+        .map(char=>{
+            if(char===" ") return " ";
+            return "_";
+        })
+        .join("");
 
     updateAnswer();
-
     updateGuessedLetters();
-
     updateStats();
-
     updateProgress();
 
-    document
-        .getElementById("message")
-        .textContent = "";
+    document.getElementById("message")
+        .textContent="";
 
+    const input=
+        document.getElementById("letterInput");
 
-    const input =
-        document.getElementById(
-            "letterInput"
-        );
-
-
-    input.value = "";
-
+    input.value="";
 
     drawHangman();
 
-    avatarMessage(
-        "Question time! 🧠"
-    );
+    avatarMessage("Question time! 🧠");
 
-
-    setTimeout(() => {
-
-        if(
-            !gameFinished &&
-            document
-                .getElementById("gameScreen")
-                .classList.contains("active")
-        ){
-
+    setTimeout(()=>{
+        if(!gameFinished &&
+           document
+           .getElementById("gameScreen")
+           .classList.contains("active")){
             input.focus();
-
         }
-
     },150);
-
 }
 
 
-/* =====================================================
-   ANSWER DISPLAY
-===================================================== */
+/* ===============================
+   ANSWER
+================================ */
 
 function updateAnswer(){
 
-    const display =
-        hiddenAnswer
-            .split("")
-            .map(character => {
+    const display=hiddenAnswer
+        .split("")
+        .map(char=>{
+            if(char===" ") return " ";
+            return char;
+        })
+        .join(" ");
 
-                if(character === " "){
-                    return " ";
-                }
-
-                return character;
-
-            })
-            .join(" ");
-
-    document
-        .getElementById("answer")
-        .textContent =
-        display;
-
+    document.getElementById("answer")
+        .textContent=display;
 }
 
 
-/* =====================================================
-   GUESSED LETTERS
-===================================================== */
+/* ===============================
+   GUESSED
+================================ */
 
 function updateGuessedLetters(){
 
-    document
-        .getElementById("guessed")
-        .textContent =
-
-        guessedLetters.length > 0
-
-            ? "Guessed: " +
-              guessedLetters.join(", ")
-
-            : "Guessed: None";
-
+    document.getElementById("guessed")
+        .textContent=
+        guessedLetters.length
+        ? "Guessed: "+guessedLetters.join(", ")
+        : "Guessed: None";
 }
 
 
-/* =====================================================
+/* ===============================
    STATS
-===================================================== */
+================================ */
 
 function updateStats(){
 
-    const livesElement =
-        document.getElementById("lives");
+    document.getElementById("lives")
+        .textContent=lives;
 
-
-    livesElement.textContent =
-        "❤️ ".repeat(lives) +
-        " " +
-        lives;
-
-
-    document
-        .getElementById("score")
-        .textContent =
-        score;
-
+    document.getElementById("score")
+        .textContent=score;
 }
 
 
-/* =====================================================
+/* ===============================
    PROGRESS
-===================================================== */
+================================ */
 
 function updateProgress(){
 
-    /*
-       First question = 5%
-       Last question = 100%
-    */
+    const percentage=
+        ((currentQuestion+1)/
+        gameQuestions.length)*100;
 
-    const percentage =
-        (
-            (currentQuestion + 1) /
-            gameQuestions.length
-        ) * 100;
-
-
-    document
-        .getElementById("progress")
-        .style.width =
-        percentage + "%";
-
+    document.getElementById("progress")
+        .style.width=percentage+"%";
 }
 
 
-/* =====================================================
-   GUESS LETTER
-===================================================== */
+/* ===============================
+   GUESS
+================================ */
 
 function guessLetter(){
 
-    if(
-        gameFinished ||
-        transitioning
-    ){
-
+    if(gameFinished || transitioning){
         return;
-
     }
 
+    const input=
+        document.getElementById("letterInput");
 
-    const input =
-        document.getElementById(
-            "letterInput"
-        );
+    const letter=
+        input.value.toUpperCase().trim();
 
+    if(letter.length!==1){
 
-    let letter =
-        input.value
-            .toUpperCase()
-            .trim();
-
-
-    if(letter.length !== 1){
-
-        showMessage(
-            "⚠️ Enter ONE character."
-        );
-
-        avatarMessage(
-            "One character at a time! 🤖"
-        );
-
+        showMessage("⚠️ Enter ONE character.");
+        avatarMessage("One character at a time! 🤖");
         playSound("wrong");
 
-        input.value = "";
-
+        input.value="";
         return;
-
     }
-
-
-    /*
-       Allowed:
-       A-Z
-       +
-    */
 
     if(!/^[A-Z+]$/.test(letter)){
 
-        showMessage(
-            "⚠️ Use A-Z or + only."
-        );
-
-        avatarMessage(
-            "That character is not allowed! 😅"
-        );
-
+        showMessage("⚠️ Use A-Z or + only.");
+        avatarMessage("Only A-Z or + allowed! 😅");
         playSound("wrong");
 
-        input.value = "";
-
+        input.value="";
         return;
-
     }
 
-
-    /*
-       Prevent duplicate letters.
-
-       For C++, + can be guessed twice
-       because the answer contains two +.
-    */
-
-    if(
-        letter !== "+" &&
-        guessedLetters.includes(letter)
-    ){
+    if(guessedLetters.includes(letter)){
 
         showMessage(
             `⚠️ ${letter} already guessed!`
         );
 
-        avatarMessage(
-            "Try another character! 😎"
-        );
-
+        avatarMessage("Try another character! 😎");
         playSound("wrong");
 
-        input.value = "";
-
+        input.value="";
         return;
-
     }
-
-
-    if(
-        letter === "+" &&
-        guessedLetters.filter(
-            item => item === "+"
-        ).length >= 2
-    ){
-
-        showMessage(
-            "⚠️ You already guessed all + symbols!"
-        );
-
-        input.value = "";
-
-        return;
-
-    }
-
 
     guessedLetters.push(letter);
 
-
-    const answer =
+    const answer=
         gameQuestions[currentQuestion]
-            .answer
-            .toUpperCase();
+        .answer
+        .toUpperCase();
 
+    let found=false;
 
-    let found = false;
-
-
-    let newAnswer =
+    let newAnswer=
         hiddenAnswer.split("");
 
+    for(let i=0;i<answer.length;i++){
 
-    /*
-       Reveal matching characters.
-    */
+        if(answer[i]===letter){
 
-    for(
-        let i = 0;
-        i < answer.length;
-        i++
-    ){
-
-        if(answer[i] === letter){
-
-            newAnswer[i] = letter;
-
-            found = true;
-
+            newAnswer[i]=letter;
+            found=true;
         }
-
     }
 
-
-    hiddenAnswer =
-        newAnswer.join("");
-
-
-    /* =================================================
-       CORRECT
-    ================================================= */
+    hiddenAnswer=newAnswer.join("");
 
     if(found){
 
-        score += 5;
+        score+=5;
 
-
-        showMessage(
-            "✅ CORRECT! +5 POINTS"
-        );
-
+        showMessage("✅ CORRECT! +5 POINTS");
 
         avatarMessage(
             "BOOM! That's correct! 🔥"
         );
 
-
         playSound("correct");
-
 
         flashGame("correct");
 
-    }
-
-
-    /* =================================================
-       WRONG
-    ================================================= */
-
-    else{
+    }else{
 
         lives--;
 
-
-        showMessage(
-            "❌ WRONG GUESS!"
-        );
-
+        showMessage("❌ WRONG GUESS!");
 
         avatarMessage(
             "Don't give up! 💪"
         );
 
-
         playSound("wrong");
 
-
         flashGame("wrong");
-
     }
 
-
     updateAnswer();
-
     updateGuessedLetters();
-
     updateStats();
-
     drawHangman();
 
+    input.value="";
 
-    input.value = "";
+    if(hiddenAnswer===answer){
 
-
-    /* =================================================
-       ANSWER COMPLETE
-    ================================================= */
-
-    if(hiddenAnswer === answer){
-
-        transitioning = true;
-
+        transitioning=true;
 
         showMessage(
             "🎉 ANSWER COMPLETE!"
         );
 
-
         avatarMessage(
             "AMAZING! Next question! 🚀"
         );
 
-
         playSound("win");
 
-
-        setTimeout(() => {
-
+        setTimeout(()=>{
             nextQuestion();
-
         },1000);
 
-
         return;
-
     }
 
+    if(lives<=0){
 
-    /* =================================================
-       CURRENT QUESTION GAME OVER
-    ================================================= */
+        transitioning=true;
 
-    if(lives <= 0){
-
-        transitioning = true;
-
-
-        setTimeout(() => {
-
+        setTimeout(()=>{
             gameOver();
-
         },800);
-
     }
-
 }
 
 
-/* =====================================================
-   NEXT QUESTION
-===================================================== */
+/* ===============================
+   NEXT
+================================ */
 
 function nextQuestion(){
 
-    if(gameFinished){
-        return;
-    }
-
+    if(gameFinished) return;
 
     currentQuestion++;
 
-
-    if(
-        currentQuestion >=
-        gameQuestions.length
-    ){
-
+    if(currentQuestion>=gameQuestions.length){
         finishGame();
-
-    }
-
-    else{
-
+    }else{
         loadQuestion();
-
     }
-
 }
 
 
-/* =====================================================
-   GAME OVER CURRENT QUESTION
-===================================================== */
+/* ===============================
+   GAME OVER QUESTION
+================================ */
 
 function gameOver(){
 
-    if(gameFinished){
-        return;
-    }
+    if(gameFinished) return;
 
-
-    const answer =
-        gameQuestions[currentQuestion]
-            .answer;
-
+    const answer=
+        gameQuestions[currentQuestion].answer;
 
     showMessage(
-        "💀 OUT OF LIVES! Answer: " +
-        answer
+        "💀 OUT OF LIVES! Answer: "+answer
     );
-
 
     avatarMessage(
         "No problem! Keep going! 🚀"
     );
 
-
     drawHangman();
 
-
-    setTimeout(() => {
-
+    setTimeout(()=>{
         nextQuestion();
-
     },1500);
-
 }
 
 
-/* =====================================================
-   FINISH GAME
-===================================================== */
+/* ===============================
+   FINISH
+================================ */
 
 function finishGame(){
 
-    if(gameFinished){
-        return;
-    }
+    if(gameFinished) return;
 
+    gameFinished=true;
+    transitioning=false;
 
-    gameFinished = true;
+    document.getElementById("finalScore")
+        .textContent=
+        score+" Points";
 
-    transitioning = false;
+    /*
+       Calculate realistic maximum score:
+       each unique character can give +5.
+    */
 
+    let maxScore=0;
 
-    document
-        .getElementById("finalScore")
-        .textContent =
-        score + " Points";
+    gameQuestions.forEach(q=>{
 
+        const uniqueChars=
+            new Set(
+                q.answer
+                .toUpperCase()
+                .replace(/ /g,"")
+                .split("")
+            );
 
-    let maxScore = 0;
-
-    gameQuestions.forEach(q => {
-
-        maxScore +=
-            q.answer.replace(/ /g,"").length * 5;
-
+        maxScore+=uniqueChars.size*5;
     });
 
+    let performance="";
 
-    let performance = "";
+    if(score>=maxScore*.8){
 
-
-    if(score >= maxScore * 0.8){
-
-        performance =
+        performance=
             "🔥 LEGENDARY! Outstanding OOP knowledge!";
 
-    }
+    }else if(score>=maxScore*.6){
 
-    else if(score >= maxScore * 0.6){
-
-        performance =
+        performance=
             "🚀 GREAT JOB! Strong performance!";
 
-    }
+    }else if(score>=maxScore*.4){
 
-    else if(score >= maxScore * 0.4){
-
-        performance =
+        performance=
             "💪 GOOD EFFORT! Keep practicing!";
 
-    }
+    }else{
 
-    else{
-
-        performance =
+        performance=
             "📚 KEEP LEARNING! Practice makes perfect!";
-
     }
 
-
-    document
-        .getElementById("resultMessage")
-        .textContent =
-        performance +
-        " You completed all " +
-        gameQuestions.length +
+    document.getElementById("resultMessage")
+        .textContent=
+        performance+
+        " You completed all "+
+        gameQuestions.length+
         " questions.";
-
 
     showScreen("resultScreen");
 
-
     playSound("win");
-
-
     flashGame("win");
-
 }
 
 
-/* =====================================================
-   AI MESSAGE
-===================================================== */
+/* ===============================
+   AVATAR MESSAGE
+================================ */
 
 function avatarMessage(message){
 
-    const box =
-        document.getElementById(
-            "avatarMessage"
-        );
+    const boxes=[
+        document.getElementById("avatarMessage"),
+        document.getElementById("gameAvatar")
+    ];
 
+    boxes.forEach(box=>{
 
-    if(!box){
-        return;
-    }
+        if(!box) return;
 
+        box.textContent=message;
 
-    box.textContent =
-        message;
-
-
-    box.style.animation =
-        "none";
-
-
-    void box.offsetWidth;
-
-
-    box.style.animation =
-        "messagePop .4s ease";
-
+    });
 }
 
 
-/* =====================================================
-   VISUAL FLASH EFFECT
-===================================================== */
+/* ===============================
+   MESSAGE
+================================ */
+
+function showMessage(message){
+
+    document.getElementById("message")
+        .textContent=message;
+}
+
+
+/* ===============================
+   FLASH
+================================ */
 
 function flashGame(type){
 
-    const container =
-        document.querySelector(
-            ".container"
-        );
+    const container=
+        document.querySelector(".container");
 
+    if(!container) return;
 
-    if(!container){
-        return;
-    }
+    if(type==="correct"){
 
-
-    if(type === "correct"){
-
-        container.style.boxShadow =
-            "0 0 30px #22d3ee," +
+        container.style.boxShadow=
+            "0 0 30px #22d3ee,"+
             "0 0 80px #22d3ee55";
-
     }
 
+    if(type==="wrong"){
 
-    if(type === "wrong"){
-
-        container.style.boxShadow =
-            "0 0 30px #ec4899," +
+        container.style.boxShadow=
+            "0 0 30px #ec4899,"+
             "0 0 80px #ec489955";
-
     }
 
+    if(type==="win"){
 
-    if(type === "win"){
-
-        container.style.boxShadow =
-            "0 0 40px #facc15," +
+        container.style.boxShadow=
+            "0 0 40px #facc15,"+
             "0 0 100px #a855f766";
-
     }
 
+    setTimeout(()=>{
 
-    setTimeout(() => {
-
-        container.style.boxShadow =
-            "0 0 25px #7c3aed66," +
-            "0 0 70px #06b6d433," +
+        container.style.boxShadow=
+            "0 0 25px #7c3aed66,"+
+            "0 0 70px #06b6d433,"+
             "inset 0 0 50px #ffffff05";
 
     },500);
-
 }
 
 
-/* =====================================================
-   INSTRUCTIONS
-===================================================== */
-
-function showInstructions(){
-
-    playSound("click");
-
-    showScreen(
-        "instructionScreen"
-    );
-
-}
-
-
-/* =====================================================
-   EXIT
-===================================================== */
-
-function exitGame(){
-
-    playSound("click");
-
-
-    alert(
-        "💥 Thanks for playing BOOM BLASTIC Hangman! 💥"
-    );
-
-}
-
-
-/* =====================================================
-   HANGMAN DRAWING
-===================================================== */
+/* ===============================
+   HANGMAN
+================================ */
 
 function drawHangman(){
 
-    const canvas =
+    const canvas=
         document.getElementById(
             "hangmanCanvas"
         );
 
+    if(!canvas) return;
 
-    if(!canvas){
-        return;
-    }
-
-
-    const ctx =
-        canvas.getContext("2d");
-
+    const ctx=canvas.getContext("2d");
 
     ctx.clearRect(
         0,
@@ -1236,13 +1492,7 @@ function drawHangman(){
         canvas.height
     );
 
-
-    /*
-       Background glow
-    */
-
-    ctx.fillStyle =
-        "#020617";
+    ctx.fillStyle="#020617";
 
     ctx.fillRect(
         0,
@@ -1251,69 +1501,34 @@ function drawHangman(){
         canvas.height
     );
 
+    ctx.shadowBlur=12;
+    ctx.shadowColor="#22d3ee";
 
-    /*
-       Glow settings
-    */
+    ctx.lineWidth=5;
+    ctx.strokeStyle="#e2e8f0";
+    ctx.lineCap="round";
 
-    ctx.shadowBlur = 12;
-
-    ctx.shadowColor =
-        "#22d3ee";
-
-
-    ctx.lineWidth = 5;
-
-    ctx.strokeStyle =
-        "#e2e8f0";
-
-    ctx.lineCap =
-        "round";
-
-
-    /* =================================================
-       GALLOWS
-    ================================================= */
+    /* GALLOWS */
 
     ctx.beginPath();
 
-
-    /* Base */
-
     ctx.moveTo(30,220);
-
     ctx.lineTo(210,220);
 
-
-    /* Pole */
-
     ctx.moveTo(70,220);
-
     ctx.lineTo(70,30);
-
-
-    /* Top */
 
     ctx.lineTo(170,30);
 
-
-    /* Rope */
-
     ctx.lineTo(170,60);
-
 
     ctx.stroke();
 
+    const wrong=5-lives;
 
-    const wrong =
-        5 - lives;
+    /* HEAD */
 
-
-    /* =================================================
-       HEAD
-    ================================================= */
-
-    if(wrong >= 1){
+    if(wrong>=1){
 
         ctx.beginPath();
 
@@ -1322,180 +1537,109 @@ function drawHangman(){
             85,
             25,
             0,
-            Math.PI * 2
+            Math.PI*2
         );
 
         ctx.stroke();
-
     }
 
+    /* BODY */
 
-    /* =================================================
-       BODY
-    ================================================= */
-
-    if(wrong >= 2){
+    if(wrong>=2){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            170,
-            110
-        );
-
-        ctx.lineTo(
-            170,
-            165
-        );
+        ctx.moveTo(170,110);
+        ctx.lineTo(170,165);
 
         ctx.stroke();
-
     }
 
+    /* LEFT ARM */
 
-    /* =================================================
-       LEFT ARM
-    ================================================= */
-
-    if(wrong >= 3){
+    if(wrong>=3){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            170,
-            125
-        );
-
-        ctx.lineTo(
-            135,
-            150
-        );
+        ctx.moveTo(170,125);
+        ctx.lineTo(135,150);
 
         ctx.stroke();
-
     }
 
+    /* RIGHT ARM */
 
-    /* =================================================
-       RIGHT ARM
-    ================================================= */
-
-    if(wrong >= 4){
+    if(wrong>=4){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            170,
-            125
-        );
-
-        ctx.lineTo(
-            205,
-            150
-        );
+        ctx.moveTo(170,125);
+        ctx.lineTo(205,150);
 
         ctx.stroke();
-
     }
 
+    /* LEGS */
 
-    /* =================================================
-       LEGS
-    ================================================= */
-
-    if(wrong >= 5){
+    if(wrong>=5){
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            170,
-            165
-        );
+        ctx.moveTo(170,165);
+        ctx.lineTo(140,200);
 
-        ctx.lineTo(
-            140,
-            200
-        );
-
-
-        ctx.moveTo(
-            170,
-            165
-        );
-
-        ctx.lineTo(
-            200,
-            200
-        );
+        ctx.moveTo(170,165);
+        ctx.lineTo(200,200);
 
         ctx.stroke();
-
     }
 
-
-    /*
-       Reset glow
-    */
-
-    ctx.shadowBlur = 0;
-
+    ctx.shadowBlur=0;
 }
 
 
-/* =====================================================
+/* ===============================
    ENTER KEY
-===================================================== */
+================================ */
 
-document
-    .getElementById("letterInput")
-    .addEventListener(
-        "keydown",
-        function(event){
+document.getElementById("letterInput")
+.addEventListener("keydown",function(event){
 
-            if(event.key === "Enter"){
+    if(event.key==="Enter"){
 
-                event.preventDefault();
-
-                guessLetter();
-
-            }
-
-        }
-    );
-
-
-/* =====================================================
-   INPUT AUTO UPPERCASE
-===================================================== */
-
-document
-    .getElementById("letterInput")
-    .addEventListener(
-        "input",
-        function(){
-
-            this.value =
-                this.value
-                    .toUpperCase()
-                    .slice(0,1);
-
-        }
-    );
-
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-
-window.addEventListener(
-    "load",
-    function(){
-
-        showScreen(
-            "menuScreen"
-        );
-
+        event.preventDefault();
+        guessLetter();
     }
-);
+
+});
+
+
+/* ===============================
+   INPUT
+================================ */
+
+document.getElementById("letterInput")
+.addEventListener("input",function(){
+
+    this.value=
+        this.value
+        .toUpperCase()
+        .slice(0,1);
+
+});
+
+
+/* ===============================
+   INITIALIZE
+================================ */
+
+window.addEventListener("load",function(){
+
+    showScreen("menuScreen");
+
+});
 
 </script>
+
+</body>
+</html>
